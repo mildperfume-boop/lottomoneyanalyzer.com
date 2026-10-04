@@ -1,7 +1,7 @@
-/* Lotto Money Analyzer 1.0 - offline support.
+/* Lotto Money Analyzer 1.2.1 - offline support.
    Only app files are cached here. Your drawings and saved sets live in the
    browser's own storage and are never touched by this file or by updates. */
-var VERSION = "lma-1.0";
+var VERSION = "lma-1.2.1";
 var APP_FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", function (e) {
@@ -30,6 +30,10 @@ self.addEventListener("fetch", function (e) {
   }
 
   if (url.origin !== self.location.origin) return;
+
+  // Winning-number data files always come straight from the internet, never from a saved copy,
+  // so the app can't mistake an old file for a live check.
+  if (/\.csv$/i.test(url.pathname)) return;
 
   // App files: try the internet first so updates show up, fall back to the saved copy offline.
   e.respondWith(fetch(req).then(function (res) {

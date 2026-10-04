@@ -257,6 +257,48 @@ progress{width:100%;height:10px;margin-top:12px;accent-color:var(--blue)}
 .bigstat div span{color:var(--muted);font-size:.85rem}
 details.danger-zone{margin-top:30px;color:var(--muted)}
 details.danger-zone summary{cursor:pointer;font-size:.95rem;min-height:44px;display:flex;align-items:center}
+.upd{margin-top:22px;padding:16px;border:2px solid var(--blue);border-radius:14px;background:var(--surface)}
+.upd .btn.big{margin-top:0}
+.updmsg{margin-top:12px;font-weight:700;font-size:1rem}
+.updmsg:empty{display:none}
+.updmsg.ok{color:var(--ok)} .updmsg.warn{color:var(--warn)} .updmsg.bad{color:var(--bad)}
+.updmsg p{margin:0 0 8px}
+.livebox{margin-top:14px;padding:12px;border-radius:10px;background:var(--soft);font-size:.92rem}
+.livebox .kv{align-items:flex-start}
+.livebox .kv span:last-child{text-align:right}
+.livebox .src{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+.newbanner{margin-top:14px;padding:14px;border-radius:12px;background:color-mix(in srgb,var(--mb) 22%,var(--surface));border:2px solid var(--mb)}
+.newbanner b.big{display:block;font-family:var(--display);font-size:1.2rem;font-weight:800}
+.newbanner ul{margin:8px 0 0;padding-left:20px;font-size:.95rem}
+.updfacts{margin-top:14px}
+.updfacts .kv{border-top:1px solid var(--line);padding:9px 0;align-items:center;flex-wrap:wrap}
+.updfacts .balls.small{margin-top:6px;width:100%}
+.pill{font-size:.82rem;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap;background:var(--soft);color:var(--muted)}
+.pill.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.toggle{display:flex;gap:12px;align-items:center;padding:12px 14px;margin-top:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;min-height:54px}
+.toggle input{width:24px;height:24px;accent-color:var(--blue);flex:0 0 auto}
+.badge{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px;white-space:nowrap}
+.badge.v{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.badge.d{background:var(--soft);color:var(--muted)}
+.bottomline{margin-top:18px;padding:14px 16px;border-radius:12px;border:2px solid var(--ink);background:var(--surface)}
+.bottomline h3{margin:0 0 6px}
+.bottomline ul{margin:8px 0 0;padding-left:20px}
+.bottomline li{margin:5px 0}
+.scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:10px}
+.dtab{border-collapse:collapse;font-size:.86rem;width:100%;min-width:320px;font-variant-numeric:tabular-nums}
+.dtab th{font-weight:700;color:var(--muted);font-size:.76rem;text-align:left;padding:5px 6px;border-bottom:1px solid var(--line)}
+.dtab td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}
+.dtab td.r,.dtab th.r{text-align:right}
+.dtab small.sub{display:block;color:var(--muted);font-size:.74rem;line-height:1.3}
+.nw{white-space:nowrap}
+details.dsec{border-top:1px solid var(--line);margin-top:4px}
+details.dsec>summary{cursor:pointer;min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:var(--display);font-weight:800;font-size:1.08rem}
+details.dsec>summary span.badge{font-family:var(--body)}
+details.dsec[open]>summary{margin-bottom:4px}
+#dpSims{grid-template-columns:repeat(3,1fr)}
+.chg{background:color-mix(in srgb,var(--mb) 45%,transparent);border-radius:4px;padding:0 3px}
+.issue{color:var(--warn);font-size:.86rem}
 footer{margin-top:36px;color:var(--muted);font-size:.85rem}
 </style>
 </head>
@@ -274,6 +316,8 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
       <button class="tab" data-view="picks">Smart Picks</button>
       <button class="tab" data-view="backtest">Back-test</button>
       <button class="tab" data-view="tickets">Ticket Builder</button>
+      <button class="tab" data-view="deep">🧠 Deep Analysis</button>
+      <button class="tab" data-view="mytix">🎟 My Tickets</button>
     </nav>
   </header>
 
@@ -286,6 +330,28 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     <div class="balls" id="latestBalls"></div>
   </section>
 
+  <section class="upd" aria-labelledby="updBtn">
+    <button class="btn big" id="updBtn">🔄 UPDATE WINNING NUMBERS</button>
+    <div class="newbanner" id="updNew" hidden>
+      <b class="big">🎉 NEW DRAWING AVAILABLE</b>
+      <ul id="updNewList"></ul>
+      <div class="row"><button class="btn big" id="updAddBtn">ADD NEW DRAWING</button></div>
+    </div>
+    <p class="updmsg" id="updMsg" aria-live="polite"></p>
+    <div class="updfacts">
+      <div class="kv"><span>Last Updated</span><span id="updLast">Not yet</span></div>
+      <div class="kv"><span>Latest Powerball Drawing</span><span id="updPbDate">—</span><div class="balls small" id="updPbBalls"></div></div>
+      <div class="kv"><span>Latest Mega Millions Drawing</span><span id="updMmDate">—</span><div class="balls small" id="updMmBalls"></div></div>
+      <div class="kv"><span>Number of New Drawings Added</span><span id="updCount">—</span></div>
+    </div>
+    <div class="livebox" aria-live="polite">
+      <div class="kv"><span>Last successful live check</span><span id="liveWhen">Not yet</span></div>
+      <div class="kv"><span>Data source checked</span><span id="liveSource">—</span></div>
+      <div class="kv"><span>Latest Powerball at source</span><span id="livePb">—</span></div>
+      <div class="kv"><span>Latest Mega Millions at source</span><span id="liveMm">—</span></div>
+    </div>
+  </section>
+
   <section class="block">
     <h2 id="historyTitle">Drawing history</h2>
     <div class="facts">
@@ -294,6 +360,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
       <div class="fact"><b id="factLast">—</b><span>newest</span></div>
     </div>
     <p class="saved" id="savedWhere"><span class="dot"></span>Checking where your data is saved…</p>
+    <p class="help" id="autoMsg" hidden></p>
   </section>
 
   <section class="block">
@@ -304,6 +371,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
 
   <section class="block">
     <h2 id="addTitle">Add drawings</h2>
+    <p class="help"><b>Backup option.</b> You normally don't need this: use 🔄 UPDATE WINNING NUMBERS above. Use this only if automatic updating isn't working.</p>
     <p class="help" id="addHelp"></p>
     <div class="row">
       <label class="btn filelabel" for="fileInput">Open a downloaded file</label>
@@ -321,6 +389,19 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     <h2>Recent drawings</h2>
     <p class="help">Draw numbers count from your oldest stored drawing for this game. They are this app's own numbering.</p>
     <div class="list" id="recentList"></div>
+  </section>
+
+  <section class="block">
+    <h2>Settings</h2>
+    <label class="toggle"><input type="checkbox" id="setAutoAdd"><span><b>Automatically add verified new drawings</b><br><span class="help" style="margin:0">When the app opens and finds a new drawing that passes every check, it's added right away.</span></span></label>
+    <h3>Data source status</h3>
+    <div class="updfacts">
+      <div class="kv"><span>Powerball</span><span class="pill" id="dsPb">Not Checked</span></div>
+      <div class="kv"><span>Mega Millions</span><span class="pill" id="dsMm">Not Checked</span></div>
+      <div class="kv"><span>Last Successful Update</span><span id="dsLast">Never</span></div>
+      <div class="kv"><span>Latest Drawing Stored</span><span id="dsStored">—</span></div>
+    </div>
+    <p class="help">Results come live from the New York Lottery's official public results data (data.ny.gov), which other websites are allowed to read. New York usually publishes each drawing a few hours after it happens, often overnight. If that source can't be reached, the app uses the copy on lottomoneyanalyzer.com that GitHub updates from the Texas Lottery, which can be a day behind. Inside the Claude app, live checks can't run at all, because Claude blocks connections to other websites. Powerball and Mega Millions are checked and stored separately.</p>
   </section>
 
   <section class="block">
@@ -485,6 +566,21 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     </section>
 
     <p class="callout">Every combination, smart or random, has exactly the same chance of winning: the jackpot odds shown at the top. Smart Picks only change <b>which</b> combinations you get, not your odds.</p>
+
+    <section class="block" id="sp2">
+      <h2>Smart Picks 2.0</h2>
+      <p class="help">Build a set of tickets with one method. Each ticket explains how it was made. No method makes a ticket more likely to win; run 🧠 Deep Analysis to see how each one actually did against random picks.</p>
+      <div class="strats" id="sp2List"></div>
+      <p class="help" style="margin-top:14px">How many tickets?</p>
+      <div class="lookback" role="group" aria-label="Number of tickets" id="sp2Counts">
+        <button data-sc="3">3</button><button data-sc="5">5</button><button data-sc="10">10</button><button data-sc="20">20</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="sp2Anti"><span><b>Avoid commonly picked patterns</b><br><span class="help" style="margin:0">Skips tickets with 3 or more numbers from 1–31 (birthdays), runs like 7-8-9, evenly spaced numbers and similar patterns many people choose.</span></span></label>
+      <p class="help">This does <b>not</b> make a ticket more likely to be drawn. Its only purpose is that, if you win, you may be less likely to share the prize with other people who picked the same numbers.</p>
+      <div class="row"><button class="btn big" id="sp2Gen">Generate Smart Picks 2.0</button></div>
+      <p class="help" id="sp2Basis"></p>
+      <div id="sp2Out"></div>
+    </section>
   </div>
 
   <div id="viewBacktest" hidden>
@@ -555,6 +651,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     <section class="block" id="tbOut" hidden>
       <p class="picks-head" id="tbTitle"></p>
       <p class="help" id="tbMeta"></p>
+      <div id="tbDiv"></div>
       <div class="row"><button class="btn big" id="tbCopyAll">COPY ALL PICKS</button></div>
       <div class="row"><button class="btn big ghost" id="tbImage">SAVE AS IMAGE</button></div>
       <div id="tbFallback"></div>
@@ -575,6 +672,36 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
       <p class="help" id="tbSavedHelp"></p>
       <div id="tbSavedList"></div>
     </section>
+  </div>
+
+  <div id="viewDeep" hidden>
+    <section class="latest">
+      <h2>Deep Analysis / Strategy Lab</h2>
+      <p class="help" style="color:var(--ink)">Tests whether any number-picking strategy actually did better than random picks. Every historical drawing is predicted using <b>only</b> drawings that came before it, and the final verdict comes from recent drawings the strategies were never tuned on.</p>
+      <p class="help" style="margin-top:14px">Simulated random drawings to compare with:</p>
+      <div class="btctl" role="group" aria-label="Simulation size" id="dpSims">
+        <button data-sims="10000">10,000</button><button data-sims="100000">100,000</button><button data-sims="1000000">1,000,000</button>
+      </div>
+      <div class="row"><button class="btn big" id="dpRun">🧠 RUN DEEP ANALYSIS</button></div>
+      <div id="dpProgWrap" hidden><progress id="dpProg" max="1" value="0"></progress><p class="help" id="dpProgText"></p>
+        <div class="row"><button class="btn ghost" id="dpStop">Stop</button></div></div>
+      <p class="help" id="dpInfo"></p>
+    </section>
+    <div id="dpOut"></div>
+  </div>
+
+  <div id="viewMytix" hidden>
+    <section class="latest">
+      <h2>🎟 Analyze My Tickets</h2>
+      <p class="help" style="color:var(--ink)">Check tickets you bought or generated for duplicates, overlap and coverage. Nothing here changes any ticket's chance of winning.</p>
+      <p class="help" style="margin-top:14px"><b>Load tickets</b> (or paste them below):</p>
+      <div id="mtSources"></div>
+      <p class="help">One ticket per line: 5 white balls, then the bonus ball. Example: <code>3 18 27 45 66 12</code></p>
+      <textarea id="mtPaste" placeholder="3 18 27 45 66 12" aria-label="Tickets to analyze"></textarea>
+      <div class="row"><button class="btn big" id="mtRun">🎟 ANALYZE MY TICKETS</button></div>
+      <p class="help" id="mtMsg"></p>
+    </section>
+    <div id="mtOut"></div>
   </div>
 
   <div id="copySheet" hidden>
@@ -604,9 +731,497 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     </div>
   </div>
 
-  <footer>Lotto Money Analyzer <span id="appVersion">1.0</span>. Drawings, analysis, Smart Picks, back-test and Ticket Builder. For entertainment and analysis only. Nothing here predicts winning numbers. Every valid combination has the same jackpot odds.</footer>
+  <footer>Lotto Money Analyzer v<span id="appVersion">1.2.1</span>. Drawings, analysis, Smart Picks, back-test, Ticket Builder, Deep Analysis and ticket checks. For entertainment and analysis only. Nothing here predicts winning numbers. Every valid combination has the same jackpot odds.</footer>
 </div>
 
+<script id="labEngine">
+var LMA_LAB=(function(){
+"use strict";
+// ============================================================================
+// Lotto Money Analyzer — Deep Analysis / Strategy Lab engine (v1.3)
+// Pure calculations only: no screen code, so it can run inside a Web Worker.
+// History format: [{d:"YYYY-MM-DD", m:[5 sorted white balls], b:bonus, bOk:true if the
+// bonus used today's range}], oldest first, ONLY drawings under today's white-ball rules.
+// ============================================================================
+
+// ---------- Random numbers (repeatable) ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hashSeed(){var h=2166136261,s=Array.prototype.join.call(arguments,"|");for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+
+// ---------- Math ----------
+function choose(n,k){if(k<0||k>n)return 0;var r=1;for(var i=1;i<=k;i++)r=r*(n-k+i)/i;return r}
+function hyper(K,N,draw,k){return choose(K,k)*choose(N-K,draw-k)/choose(N,draw)}
+function lnGamma(z){var g=7,c=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  if(z<0.5)return Math.log(Math.PI/Math.sin(Math.PI*z))-lnGamma(1-z);z-=1;var x=c[0];for(var i=1;i<g+2;i++)x+=c[i]/(z+i);var t=z+g+0.5;return 0.5*Math.log(2*Math.PI)+(z+0.5)*Math.log(t)-t+Math.log(x)}
+function gammaP(a,x){if(x<=0)return 0;
+  if(x<a+1){var sum=1/a,del=sum,ap=a;for(var n=0;n<500;n++){ap+=1;del*=x/ap;sum+=del;if(Math.abs(del)<Math.abs(sum)*1e-12)break}return sum*Math.exp(-x+a*Math.log(x)-lnGamma(a))}
+  var b=x+1-a,c=1e300,d=1/b,h=d;for(var i=1;i<500;i++){var an=-i*(i-a);b+=2;d=an*d+b;if(Math.abs(d)<1e-300)d=1e-300;c=b+an/c;if(Math.abs(c)<1e-300)c=1e-300;d=1/d;var de=d*c;h*=de;if(Math.abs(de-1)<1e-12)break}
+  return 1-Math.exp(-x+a*Math.log(x)-lnGamma(a))*h}
+function chiP(x,df){return df>0?Math.max(0,Math.min(1,1-gammaP(df/2,x/2))):1}
+function normCdf(z){var t=1/(1+0.2316419*Math.abs(z)),d=0.3989422804014327*Math.exp(-z*z/2);
+  var p=d*t*(0.319381530+t*(-0.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))));return z>0?1-p:p}
+function pTwo(z){return isFinite(z)?Math.min(1,2*(1-normCdf(Math.abs(z)))):1}
+function mean(a){var s=0;for(var i=0;i<a.length;i++)s+=a[i];return a.length?s/a.length:0}
+function sdev(a){if(a.length<2)return 0;var m=mean(a),s=0;for(var i=0;i<a.length;i++)s+=(a[i]-m)*(a[i]-m);return Math.sqrt(s/(a.length-1))}
+function median(a){if(!a.length)return 0;var s=a.slice().sort(function(x,y){return x-y}),h=s.length>>1;return s.length%2?s[h]:(s[h-1]+s[h])/2}
+// Chi-square goodness of fit. Bins with small expected counts are merged so the test stays valid.
+function gof(obs,probs,total){
+  var o=obs.slice(),e=probs.map(function(p){return p*total});
+  var bins=o.map(function(x,i){return {o:x,e:e[i]}});
+  var changed=true;
+  while(changed&&bins.length>2){changed=false;
+    var mi=-1,me=Infinity;for(var i=0;i<bins.length;i++)if(bins[i].e<me){me=bins[i].e;mi=i}
+    if(me<5){var j=mi===0?1:(mi===bins.length-1?mi-1:(bins[mi-1].e<bins[mi+1].e?mi-1:mi+1));
+      bins[j]={o:bins[j].o+bins[mi].o,e:bins[j].e+bins[mi].e};bins.splice(mi,1);changed=true}}
+  var x=0;bins.forEach(function(b){if(b.e>0)x+=(b.o-b.e)*(b.o-b.e)/b.e});
+  var df=bins.length-1, ok=bins.every(function(b){return b.e>=5})&&df>=1;
+  return {chi:x,df:df,p:ok?chiP(x,df):null,valid:ok};
+}
+function sumDistribution(M){ // exact probability of each sum of 5 different numbers from 1..M
+  var max=5*M,dp=[];for(var k=0;k<=5;k++){dp.push(new Float64Array(max+1))}dp[0][0]=1;
+  for(var v=1;v<=M;v++)for(var k2=Math.min(5,v);k2>=1;k2--){var a=dp[k2],b=dp[k2-1];for(var s=max;s>=v;s--)a[s]+=b[s-v]}
+  var tot=choose(M,5),out=new Float64Array(max+1);for(var s2=0;s2<=max;s2++)out[s2]=dp[5][s2]/tot;return out;
+}
+function rangeDistribution(M){var out=new Float64Array(M),tot=choose(M,5);for(var r=4;r<M;r++)out[r]=(M-r)*choose(r-1,3)/tot;return out}
+function quantileEdges(dist,parts){ // cut points so each part holds about the same probability
+  var edges=[],c=0,k=1;for(var i=0;i<dist.length&&k<parts;i++){c+=dist[i];while(k<parts&&c>=k/parts){edges.push(i+1);k++}}return edges;
+}
+function binOf(x,edges){for(var i=0;i<edges.length;i++)if(x<edges[i])return i;return edges.length}
+var shapeCache={};
+function shapeInfo(M){
+  if(shapeCache[M])return shapeCache[M];
+  var sd=sumDistribution(M),c=0,q1=null,q3=null;
+  for(var i=0;i<sd.length;i++){c+=sd[i];if(q1===null&&c>=0.25)q1=i;if(q3===null&&c>=0.75){q3=i;break}}
+  return (shapeCache[M]={sumEdges:quantileEdges(sd,5),rangeEdges:quantileEdges(rangeDistribution(M),5),q1:q1,q3:q3,lowMax:Math.floor(M/2)});
+}
+
+// ---------- Ticket shape helpers ----------
+function shape(m,M){ // m sorted
+  var S=shapeInfo(M),odd=0,low=0,sum=0,consec=0,minSp=99,dec={},maxDec=0;
+  for(var i=0;i<5;i++){var v=m[i];if(v%2)odd++;if(v<=S.lowMax)low++;sum+=v;
+    if(i){var g=v-m[i-1];if(g===1)consec++;if(g<minSp)minSp=g}
+    var dk=Math.floor(v/10);dec[dk]=(dec[dk]||0)+1;if(dec[dk]>maxDec)maxDec=dec[dk]}
+  return {odd:odd,low:low,sum:sum,range:m[4]-m[0],consec:consec,minSp:minSp,decades:Object.keys(dec).length,maxDec:maxDec};
+}
+function isBalanced(m,M){var s=shape(m,M),S=shapeInfo(M);
+  return (s.odd===2||s.odd===3)&&(s.low===2||s.low===3)&&s.sum>=S.q1&&s.sum<=S.q3&&s.consec<=1&&s.decades>=3}
+// Patterns people commonly pick by hand. Avoiding them does NOT change the chance of being drawn.
+function crowdIssues(m){
+  var issues=[],bday=0,run=1,maxRun=1;
+  for(var i=0;i<5;i++){if(m[i]<=31)bday++;if(i){if(m[i]===m[i-1]+1){run++;if(run>maxRun)maxRun=run}else run=1}}
+  if(bday>=3)issues.push(bday+" numbers are 1–31 (birthday range)");
+  if(maxRun>=3)issues.push("has a run of "+maxRun+" consecutive numbers");
+  var d=m[1]-m[0],ap=true;for(var j=2;j<5;j++)if(m[j]-m[j-1]!==d)ap=false;
+  if(ap)issues.push("numbers are evenly spaced");
+  if(m.every(function(v){return v%5===0})||m.every(function(v){return v%7===0}))issues.push("all multiples of the same number");
+  var ld=m[0]%10;if(m.every(function(v){return v%10===ld}))issues.push("all end in the same digit");
+  if(m[4]<=31&&m[4]-m[0]<=12)issues.push("all bunched in a small low range");
+  return issues;
+}
+
+// ---------- History context (prefix sums: counts over any window that ends BEFORE drawing t) ----------
+function Ctx(hist,M,B){
+  var n=hist.length,W=M+1,BW=B+1;
+  var pm=new Int32Array((n+1)*W),pb=new Int32Array((n+1)*BW),pbn=new Int32Array(n+1);
+  for(var t=0;t<n;t++){
+    var o=t*W,o2=(t+1)*W;for(var v=0;v<W;v++)pm[o2+v]=pm[o+v];
+    for(var i=0;i<5;i++)pm[o2+hist[t].m[i]]++;
+    var p=t*BW,p2=(t+1)*BW;for(var u=0;u<BW;u++)pb[p2+u]=pb[p+u];
+    pbn[t+1]=pbn[t];if(hist[t].bOk&&hist[t].b>=1&&hist[t].b<=B){pb[p2+hist[t].b]++;pbn[t+1]++}
+  }
+  this.hist=hist;this.n=n;this.M=M;this.B=B;this.W=W;this.BW=BW;this.pm=pm;this.pb=pb;this.pbn=pbn;
+  this.pairBuf=new Int32Array(W*W);
+}
+// A view sees ONLY drawings 0..t-1. Every strategy reads history through a view.
+function View(ctx,t){this.ctx=ctx;this.t=t;this.M=ctx.M;this.B=ctx.B;this.memo={}}
+View.prototype.counts=function(L){var key="c"+L;if(this.memo[key])return this.memo[key];
+  var c=this.ctx,t=this.t,l=Math.min(L,t),out=new Float64Array(c.W),a=t*c.W,b=(t-l)*c.W;
+  for(var v=1;v<c.W;v++)out[v]=c.pm[a+v]-c.pm[b+v];out.len=l;return (this.memo[key]=out)};
+View.prototype.countsRange=function(from,to){var c=this.ctx,out=new Float64Array(c.W),a=to*c.W,b=from*c.W;for(var v=1;v<c.W;v++)out[v]=c.pm[a+v]-c.pm[b+v];return out};
+View.prototype.bcounts=function(L){var key="b"+L;if(this.memo[key])return this.memo[key];
+  var c=this.ctx,t=this.t,l=Math.min(L,t),out=new Float64Array(c.BW),a=t*c.BW,b=(t-l)*c.BW;
+  for(var v=1;v<c.BW;v++)out[v]=c.pb[a+v]-c.pb[b+v];out.len=c.pbn[t]-c.pbn[t-l];return (this.memo[key]=out)};
+View.prototype.gaps=function(){if(this.memo.g)return this.memo.g;
+  var c=this.ctx,out=new Float64Array(c.W).fill(-1),left=c.M,h=c.hist;
+  for(var s=this.t-1;s>=0&&left>0;s--)for(var i=0;i<5;i++){var v=h[s].m[i];if(out[v]<0){out[v]=this.t-1-s;left--}}
+  for(var v2=1;v2<c.W;v2++)if(out[v2]<0)out[v2]=this.t;return (this.memo.g=out)};
+View.prototype.bgaps=function(){if(this.memo.bg)return this.memo.bg;
+  var c=this.ctx,out=new Float64Array(c.BW).fill(-1),left=c.B,h=c.hist,k=0;
+  for(var s=this.t-1;s>=0&&left>0;s--){if(!h[s].bOk)continue;var v=h[s].b;if(v>=1&&v<=c.B&&out[v]<0){out[v]=k;left--}k++}
+  for(var v2=1;v2<c.BW;v2++)if(out[v2]<0)out[v2]=k;return (this.memo.bg=out)};
+View.prototype.pairs=function(L){var key="p"+L;if(this.memo[key])return this.memo[key];
+  var c=this.ctx,W=c.W,P=new Int32Array(W*W),h=c.hist,l=Math.min(L,this.t);
+  for(var s=this.t-l;s<this.t;s++){var m=h[s].m;for(var i=0;i<5;i++)for(var j=i+1;j<5;j++){P[m[i]*W+m[j]]++;P[m[j]*W+m[i]]++}}
+  var top=[];for(var a=1;a<W;a++)for(var b=a+1;b<W;b++){var x=P[a*W+b];if(x>0&&(top.length<15||x>top[top.length-1].c)){
+    top.push({a:a,b:b,c:x});top.sort(function(p,q){return q.c-p.c});if(top.length>15)top.pop()}}
+  return (this.memo[key]={P:P,top:top,len:l})};
+
+// ---------- Sampling ----------
+function weightedPick5(w,rng,M,forced){ // weighted sampling without replacement
+  var ww=new Float64Array(M+1),out=(forced||[]).slice();for(var v=1;v<=M;v++)ww[v]=w[v]>0?w[v]:0;
+  out.forEach(function(v){ww[v]=0});
+  while(out.length<5){var tot=0;for(var v2=1;v2<=M;v2++)tot+=ww[v2];
+    var r=rng()*tot,pick=-1;
+    if(tot<=0){do{pick=1+Math.floor(rng()*M)}while(out.indexOf(pick)>=0)}
+    else{for(var v3=1;v3<=M;v3++){r-=ww[v3];if(r<=0&&ww[v3]>0){pick=v3;break}}if(pick<0){for(var v4=M;v4>=1;v4--)if(ww[v4]>0){pick=v4;break}}}
+    out.push(pick);ww[pick]=0}
+  return out.sort(function(a,b){return a-b});
+}
+function weightedPick1(w,rng,K){var tot=0,i;for(i=1;i<=K;i++)tot+=Math.max(0,w[i]);if(tot<=0)return 1+Math.floor(rng()*K);
+  var r=rng()*tot;for(i=1;i<=K;i++){r-=Math.max(0,w[i]);if(r<=0)return i}return K}
+function uniform5(rng,M){var out=[];while(out.length<5){var v=1+Math.floor(rng()*M);if(out.indexOf(v)<0)out.push(v)}return out.sort(function(a,b){return a-b})}
+function rankScores(vals,M){ // 0 (lowest) .. 1 (highest), ties share the average rank
+  var idx=[];for(var v=1;v<=M;v++)idx.push(v);idx.sort(function(a,b){return vals[a]-vals[b]});
+  var out=new Float64Array(M+1),i=0;while(i<M){var j=i;while(j+1<M&&vals[idx[j+1]]===vals[idx[i]])j++;var r=(i+j)/2/(M-1);for(var k=i;k<=j;k++)out[idx[k]]=r;i=j+1}return out;
+}
+function sharedCount(a,b){var k=0;for(var i=0;i<5;i++)if(b.indexOf(a[i])>=0)k++;return k}
+
+// ---------- Strategies (each sees only the view: drawings before the one being predicted) ----------
+// gen(view, rng, param, ctx2) -> {m:[5], b, why:[]} ; ctx2 = {used:counts of numbers already used in this set, prev:[tickets], explain}
+function fmtN(x){return Math.round(x*10)/10}
+var STRATS={
+  random:{name:"Pure Random",params:[null],desc:"Every number chosen completely at random. This is the fair baseline.",
+    gen:function(v,rng){return {m:uniform5(rng,v.M),b:1+Math.floor(rng()*v.B),why:["All 6 numbers chosen completely at random."]}}},
+  frequency:{name:"Frequency",params:[25,50,100,250],desc:"Leans toward numbers drawn most often in the last L drawings.",
+    gen:function(v,rng,L,x){var c=v.counts(L),bc=v.bcounts(L),w=new Float64Array(v.M+1),bw=new Float64Array(v.B+1);
+      for(var i=1;i<=v.M;i++)w[i]=(c[i]+0.5)*(c[i]+0.5);for(var j=1;j<=v.B;j++)bw[j]=(bc[j]+0.5)*(bc[j]+0.5);
+      var m=weightedPick5(w,rng,v.M),b=weightedPick1(bw,rng,v.B),why=[];
+      if(x&&x.explain){var e=c.len*5/v.M;m.forEach(function(k){why.push(k+": drawn "+c[k]+" times in the last "+c.len+" drawings (expected about "+fmtN(e)+").")});
+        why.push("Bonus "+b+": drawn "+bc[b]+" times in the last "+bc.len+" drawings (expected about "+fmtN(bc.len/v.B)+").")}
+      return {m:m,b:b,why:why}}},
+  gap:{name:"Gap (overdue)",params:[0.5,1,2],desc:"Leans toward numbers that haven't been drawn for the longest time.",
+    gen:function(v,rng,p,x){var g=v.gaps(),bg=v.bgaps(),w=new Float64Array(v.M+1),bw=new Float64Array(v.B+1);
+      for(var i=1;i<=v.M;i++)w[i]=Math.pow(g[i]+1,p);for(var j=1;j<=v.B;j++)bw[j]=Math.pow(bg[j]+1,p);
+      var m=weightedPick5(w,rng,v.M),b=weightedPick1(bw,rng,v.B),why=[];
+      if(x&&x.explain){m.forEach(function(k){why.push(k+": not drawn in the last "+g[k]+" drawings (typical gap about "+fmtN(v.M/5)+").")});
+        why.push("Bonus "+b+": not drawn in the last "+bg[b]+" drawings.");why.push("An overdue number is NOT more likely to be drawn next.")}
+      return {m:m,b:b,why:why}}},
+  stability:{name:"Frequency Stability",params:[100,200,400],desc:"Leans toward numbers that were at or above average in each quarter of the last L drawings.",
+    gen:function(v,rng,L,x){var l=Math.min(L,v.t),q=Math.max(1,Math.floor(l/4)),score=new Float64Array(v.M+1),e=q*5/v.M;
+      for(var k=0;k<4;k++){var to=v.t-k*q,from=Math.max(0,to-q);if(to<=from)continue;var c=v.countsRange(from,to);for(var i=1;i<=v.M;i++)if(c[i]>=e)score[i]++}
+      var w=new Float64Array(v.M+1);for(var i2=1;i2<=v.M;i2++)w[i2]=1+score[i2]*score[i2];
+      var m=weightedPick5(w,rng,v.M),b=1+Math.floor(rng()*v.B),why=[];
+      if(x&&x.explain){m.forEach(function(k2){why.push(k2+": at or above average in "+score[k2]+" of 4 recent periods of "+q+" drawings.")});why.push("Bonus "+b+": chosen at random.")}
+      return {m:m,b:b,why:why}}},
+  pairs:{name:"Pairs/Triples",params:[50,100,250,100000],desc:"Starts from a pair often drawn together, adds the number most often seen with that pair, then frequent partners.",
+    gen:function(v,rng,L,x){var P=v.pairs(L),W=v.M+1;
+      if(!P.top.length){var r=uniform5(rng,v.M);return {m:r,b:1+Math.floor(rng()*v.B),why:["Not enough history for pairs; chosen at random."]}}
+      var tw=new Float64Array(P.top.length+1);P.top.forEach(function(p,i){tw[i+1]=p.c});var pr=P.top[weightedPick1(tw,rng,P.top.length)-1];
+      var h=v.ctx.hist,c3=new Float64Array(W),any3=false;
+      for(var s=v.t-P.len;s<v.t;s++){var m0=h[s].m;if(m0.indexOf(pr.a)>=0&&m0.indexOf(pr.b)>=0)for(var i=0;i<5;i++){var u=m0[i];if(u!==pr.a&&u!==pr.b){c3[u]++;any3=true}}}
+      var chosen=[pr.a,pr.b],third=null;
+      if(any3){c3[pr.a]=0;c3[pr.b]=0;third=weightedPick1(c3,rng,v.M);chosen.push(third)}
+      var w=new Float64Array(W);for(var k=1;k<W;k++){if(chosen.indexOf(k)>=0)continue;var s2=0.5;for(var q=0;q<chosen.length;q++)s2+=P.P[chosen[q]*W+k];w[k]=s2*s2}
+      var m=weightedPick5(w,rng,v.M,chosen),b=1+Math.floor(rng()*v.B),why=[];
+      if(x&&x.explain){var lt=P.len;why.push(pr.a+" and "+pr.b+": drawn together "+pr.c+" times in the last "+lt+" drawings (expected about "+fmtN(lt*20/(v.M*(v.M-1)))+" for any pair).");
+        if(third!==null)why.push(third+": appeared with both "+pr.a+" and "+pr.b+" "+c3[third]+" time"+(c3[third]===1?"":"s")+".");
+        m.forEach(function(k3){if(chosen.indexOf(k3)<0)why.push(k3+": often drawn alongside the numbers above.")});why.push("Bonus "+b+": chosen at random.")}
+      return {m:m,b:b,why:why}}},
+  balanced:{name:"Balanced Structure",params:[null],desc:"Random numbers that fit the most common shape: 2–3 odd, 2–3 low, middle sum, few neighbors, spread across decades.",
+    gen:function(v,rng,p,x){var m,tries=0;do{m=uniform5(rng,v.M);tries++}while(tries<500&&!isBalanced(m,v.M));
+      var s=shape(m,v.M),S=shapeInfo(v.M),b=1+Math.floor(rng()*v.B);
+      return {m:m,b:b,why:x&&x.explain?[s.odd+" odd / "+(5-s.odd)+" even, "+s.low+" low / "+(5-s.low)+" high.","Sum "+s.sum+" (middle half of all possible sums: "+S.q1+"–"+S.q3+").","Spread over "+s.decades+" groups of ten. Numbers otherwise random.","Bonus "+b+": chosen at random."]:[]}}},
+  hybrid:{name:"Hybrid",params:[0.25,0.5,0.75],desc:"Blends Frequency (last 100) and Gap scores, then prefers a balanced shape.",
+    gen:function(v,rng,a,x){return hybridGen(v,rng,a,x,false)}},
+  divhybrid:{name:"Diversified Hybrid",params:[0.25,0.5,0.75],desc:"Hybrid, but each ticket in a set avoids numbers the earlier tickets already used.",
+    gen:function(v,rng,a,x){return hybridGen(v,rng,a,x,true)}}
+};
+function hybridGen(v,rng,a,x,div){
+  var c=v.counts(100),g=v.gaps(),fr=rankScores(c,v.M),gr=rankScores(g,v.M),w=new Float64Array(v.M+1);
+  for(var i=1;i<=v.M;i++){w[i]=Math.exp(3*(a*fr[i]+(1-a)*gr[i]));if(div&&x&&x.used)w[i]*=Math.pow(0.12,x.used[i])}
+  var bc=v.bcounts(100),bw=new Float64Array(v.B+1);for(var j=1;j<=v.B;j++){bw[j]=bc[j]+0.5;if(div&&x&&x.bused)bw[j]*=Math.pow(0.1,x.bused[j])}
+  var m=null,tries=0,best=null;
+  while(tries<40){var cand=weightedPick5(w,rng,v.M);tries++;
+    var okShare=!(div&&x&&x.prev&&x.prev.some(function(p){return sharedCount(cand,p.m)>1}));
+    if(isBalanced(cand,v.M)&&okShare){m=cand;break}if(!best&&okShare)best=cand}
+  if(!m)m=best||weightedPick5(w,rng,v.M);
+  var b=weightedPick1(bw,rng,v.B),why=[];
+  if(x&&x.explain){var e=c.len*5/v.M;m.forEach(function(k){why.push(k+": drawn "+c[k]+" times in the last "+c.len+" (expected "+fmtN(e)+"), last seen "+g[k]+" drawings ago.")});
+    why.push("Mix: "+Math.round(a*100)+"% frequency, "+Math.round((1-a)*100)+"% gap"+(div?", avoiding numbers used by earlier tickets":"")+".");why.push("Bonus "+b+": leans toward bonus numbers drawn more often in the last 100.")}
+  return {m:m,b:b,why:why};
+}
+var STRAT_ORDER=["random","frequency","gap","stability","pairs","balanced","hybrid","divhybrid"];
+function paramLabel(id,p){if(p===null||p===undefined)return "no settings";
+  if(id==="frequency"||id==="stability"||id==="pairs")return p>=100000?"all drawings":"last "+p+" drawings";
+  if(id==="gap")return "strength "+p;return Math.round(p*100)+"% frequency / "+Math.round((1-p)*100)+"% gap"}
+
+// Makes K tickets for drawing t (seeded per drawing and ticket, so results are repeatable).
+function makeTickets(view,sid,param,K,seed,explain){
+  var st=STRATS[sid],used=new Float64Array(view.M+1),bused=new Float64Array(view.B+1),prev=[],seen={};
+  for(var k=0;k<K;k++){var rng=mulberry32(hashSeed(seed,sid,param,view.t,k)),tk=null;
+    for(var a=0;a<20;a++){var g=st.gen(view,rng,param,{used:used,bused:bused,prev:prev,explain:explain});var key=g.m.join("-")+"+"+g.b;if(!seen[key]){seen[key]=1;tk=g;break}}
+    if(!tk)tk=st.gen(view,rng,param,{explain:explain});
+    prev.push(tk);tk.m.forEach(function(u){used[u]++});bused[tk.b]++}
+  return prev;
+}
+
+// ---------- Prize tiers (same structure for Powerball and today's Mega Millions) ----------
+var TIERS=[[5,1],[5,0],[4,1],[4,0],[3,1],[3,0],[2,1],[1,1],[0,1]];
+function tierIndex(k,bh){for(var i=0;i<TIERS.length;i++)if(TIERS[i][0]===k&&TIERS[i][1]===(bh?1:0))return i;return -1}
+function tierProbs(M,B){return TIERS.map(function(t){return hyper(5,M,5,t[0])*(t[1]?1/B:(B-1)/B)})}
+
+// ---------- Walk-forward test: drawing t is predicted using ONLY drawings 0..t-1 ----------
+function walk(ctx,sid,param,from,to,K,seed,record){
+  var M=ctx.M,B=ctx.B,h=ctx.hist,res={draws:0,tickets:0,dist:[0,0,0,0,0,0],bonusTickets:0,bonusHits:0,tiers:new Array(TIERS.length).fill(0),
+    prizeTickets:0,prizeHits:0,perDraw:[],perDrawPrize:[],rec:{}};
+  for(var t=from;t<to;t++){
+    var view=new View(ctx,t),tk=makeTickets(view,sid,param,K,seed,false),actual=h[t],sum=0,pz=0,pzN=0;
+    if(record&&record[t])res.rec[t]=tk.map(function(x){return x.m.join("-")+"+"+x.b});
+    for(var k=0;k<tk.length;k++){var mm=sharedCount(tk[k].m,actual.m);res.dist[mm]++;sum+=mm;res.tickets++;
+      if(actual.bOk){var bh=tk[k].b===actual.b;res.bonusTickets++;if(bh)res.bonusHits++;var ti=tierIndex(mm,bh);if(ti>=0){res.tiers[ti]++;pz++}pzN++}}
+    res.perDraw.push(sum/tk.length);if(pzN)res.perDrawPrize.push(pz/pzN);res.draws++;
+  }
+  return res;
+}
+function compare(res,base){ // per-draw averages vs an exact baseline: difference, 95% CI, p-value
+  var m=mean(res.perDraw),se=sdev(res.perDraw)/Math.sqrt(Math.max(1,res.perDraw.length)),d=m-base,z=se>0?d/se:0;
+  return {mean:m,base:base,diff:d,lo:d-1.96*se,hi:d+1.96*se,se:se,z:z,p:pTwo(z),mde:2.8*se};
+}
+function comparePaired(a,b){var d=[];for(var i=0;i<a.length&&i<b.length;i++)d.push(a[i]-b[i]);
+  var m=mean(d),se=sdev(d)/Math.sqrt(Math.max(1,d.length)),z=se>0?m/se:0;return {diff:m,lo:m-1.96*se,hi:m+1.96*se,p:pTwo(z)}}
+
+// ---------- Simulation (Monte Carlo) ----------
+var PATTERNS=[
+  {id:"odd",name:"Odd numbers",labels:["0","1","2","3","4","5"],bin:function(s){return s.odd}},
+  {id:"low",name:"Low numbers",labels:["0","1","2","3","4","5"],bin:function(s){return s.low}},
+  {id:"sum",name:"Sum (fifths of all possible sums)",labels:["Lowest fifth","2nd","Middle","4th","Highest fifth"],bin:function(s,M){return binOf(s.sum,shapeInfo(M).sumEdges)}},
+  {id:"range",name:"Range (highest minus lowest)",labels:["Narrowest fifth","2nd","Middle","4th","Widest fifth"],bin:function(s,M){return binOf(s.range,shapeInfo(M).rangeEdges)}},
+  {id:"consec",name:"Consecutive neighbors (like 14-15)",labels:["None","1 pair","2 or more"],bin:function(s){return Math.min(2,s.consec)}},
+  {id:"spacing",name:"Smallest spacing between numbers",labels:["1","2","3","4–5","6 or more"],bin:function(s){return s.minSp<=3?s.minSp-1:(s.minSp<=5?3:4)}},
+  {id:"decades",name:"Groups of ten used (1–9, 10–19 …)",labels:["1–2","3","4","5"],bin:function(s){return s.decades<=2?0:s.decades-2}},
+  {id:"cluster",name:"Most numbers in one group of ten",labels:["1","2","3 or more"],bin:function(s){return Math.min(3,s.maxDec)-1}},
+  {id:"repeat",name:"Repeats from the previous drawing",labels:["0","1","2 or more"],bin:null}
+];
+function histStats(list,M){ // list of sorted mains, consecutive
+  var n=list.length,W=M+1,cnt=new Float64Array(W),P=new Int32Array(W*W),T=new Int32Array(W*W*W),touched=[],maxP=0,maxT=0,pairsSeen=0;
+  for(var t=0;t<n;t++){var m=list[t];for(var i=0;i<5;i++){cnt[m[i]]++;
+    for(var j=i+1;j<5;j++){var pi=m[i]*W+m[j];if(P[pi]===0)pairsSeen++;P[pi]++;if(P[pi]>maxP)maxP=P[pi];
+      for(var k=j+1;k<5;k++){var ti=(m[i]*W+m[j])*W+m[k];if(T[ti]===0)touched.push(ti);T[ti]++;if(T[ti]>maxT)maxT=T[ti]}}}}
+  var p=5/M,E=n*p,chi=0,maxZ=0,sd=Math.sqrt(n*p*(1-p));
+  for(var v=1;v<W;v++){chi+=(cnt[v]-E)*(cnt[v]-E)/E;var z=sd>0?Math.abs(cnt[v]-E)/sd:0;if(z>maxZ)maxZ=z}
+  return {chiAdj:chi/(1-p),maxZ:maxZ,maxPair:maxP,maxTriple:maxT,neverPairs:M*(M-1)/2-pairsSeen,stab:stabilityR(list,M)};
+}
+function stabilityR(list,M){ // do numbers that were frequent in one block stay frequent in the next? (r near 0 = no)
+  var n=list.length,w=Math.max(25,Math.floor(n/10)),rs=[];
+  for(var s=0;s+2*w<=n;s+=2*w){var a=new Float64Array(M+1),b=new Float64Array(M+1);
+    for(var t=s;t<s+w;t++)list[t].forEach(function(v){a[v]++});for(var t2=s+w;t2<s+2*w;t2++)list[t2].forEach(function(v){b[v]++});rs.push(pearson(a,b,M))}
+  return {r:mean(rs),blocks:rs.length,w:w};
+}
+function pearson(a,b,M){var ma=0,mb=0,i;for(i=1;i<=M;i++){ma+=a[i];mb+=b[i]}ma/=M;mb/=M;var sab=0,sa=0,sb=0;
+  for(i=1;i<=M;i++){sab+=(a[i]-ma)*(b[i]-mb);sa+=(a[i]-ma)*(a[i]-ma);sb+=(b[i]-mb)*(b[i]-mb)}return sa>0&&sb>0?sab/Math.sqrt(sa*sb):0}
+
+// ---------- The full Deep Analysis ----------
+async function runDeep(inp,host){
+  var hist=inp.hist,M=inp.M,B=inp.B,n=hist.length,K=inp.ticketsPerDraw||5,seed=inp.seed>>>0,N=inp.sims;
+  var last=Date.now();
+  async function step(frac,msg){if(host.cancelled&&host.cancelled())throw new Error("cancelled");
+    if(Date.now()-last>40){last=Date.now();host.progress(frac,msg);await host.yieldNow()}}
+  var out={M:M,B:B,n:n,K:K,seed:seed,sims:N,from:hist.length?hist[0].d:null,to:hist.length?hist[n-1].d:null,gname:inp.gname,bname:inp.bname};
+  var mains=hist.map(function(h){return h.m}),bonusList=hist.filter(function(h){return h.bOk}).map(function(h){return h.b});
+  out.nBonus=bonusList.length;out.bonusFrom=inp.bonusSince;
+  host.progress(0.01,"Reading history");
+
+  // 1. Rolling windows
+  var p=5/M;out.rolling=[10,25,50,100,250,"all"].filter(function(w){return w==="all"||w<=n}).map(function(w){
+    var l=w==="all"?n:w,c=new Float64Array(M+1);for(var t=n-l;t<n;t++)mains[t].forEach(function(v){c[v]++});
+    var E=l*p,chi=0;for(var v=1;v<=M;v++)chi+=(c[v]-E)*(c[v]-E)/E;
+    var bl=w==="all"?bonusList.length:Math.min(l,bonusList.length),bc=new Float64Array(B+1);for(var t2=bonusList.length-bl;t2<bonusList.length;t2++)bc[bonusList[t2]]++;
+    var bE=bl/B,bchi=0;for(var u=1;u<=B;u++)bchi+=(bc[u]-bE)*(bc[u]-bE)/(bE||1);
+    var idx=[];for(var v2=1;v2<=M;v2++)idx.push(v2);
+    var hot=idx.slice().sort(function(a,b){return c[b]-c[a]||a-b}).slice(0,5).map(function(v){return [v,c[v]]});
+    var cold=idx.slice().sort(function(a,b){return c[a]-c[b]||a-b}).slice(0,5).map(function(v){return [v,c[v]]});
+    var bidx=[];for(var u2=1;u2<=B;u2++)bidx.push(u2);
+    return {w:w,len:l,E:E,hot:hot,cold:cold,p:E>=5?chiP(chi/(1-p),M-1):null,
+      bLen:bl,bE:bE,bHot:bidx.sort(function(a,b){return bc[b]-bc[a]||a-b}).slice(0,3).map(function(u){return [u,bc[u]]}),bp:bE>=5?chiP(bchi,B-1):null};
+  });
+
+  // 2. Frequency (all eligible drawings)
+  var cnt=new Float64Array(M+1);mains.forEach(function(m){m.forEach(function(v){cnt[v]++})});
+  var E=n*p,sdv=Math.sqrt(n*p*(1-p)),freq=[];for(var v=1;v<=M;v++){var z=sdv>0?(cnt[v]-E)/sdv:0,pv=pTwo(z);freq.push({v:v,o:cnt[v],e:E,dev:cnt[v]-E,z:z,p:pv,padj:Math.min(1,pv*M)})}
+  var bcnt=new Float64Array(B+1);bonusList.forEach(function(b){bcnt[b]++});var bn=bonusList.length,bp1=1/B,bsd=Math.sqrt(bn*bp1*(1-bp1)),bfreq=[];
+  for(var u=1;u<=B;u++){var zb=bsd>0?(bcnt[u]-bn*bp1)/bsd:0,pb=pTwo(zb);bfreq.push({v:u,o:bcnt[u],e:bn*bp1,dev:bcnt[u]-bn*bp1,z:zb,p:pb,padj:Math.min(1,pb*B)})}
+  var chiAll=0;for(var v3=1;v3<=M;v3++)chiAll+=(cnt[v3]-E)*(cnt[v3]-E)/E;
+  out.freq={rows:freq,brows:bfreq,E:E,bE:bn*bp1,chiP:E>=5?chiP(chiAll/(1-p),M-1):null,
+    over196:freq.filter(function(r){return Math.abs(r.z)>1.96}).length,expectOver196:0.05*M,flagged:freq.filter(function(r){return r.padj<0.05}).map(function(r){return r.v})};
+  await step(0.04,"Frequencies");
+
+  // 3. Gaps
+  var gaps=[],lastSeen=new Array(M+1).fill(-1),allGaps=[];var perNum=[];for(var v4=0;v4<=M;v4++)perNum.push([]);
+  for(var t3=0;t3<n;t3++)mains[t3].forEach(function(v){if(lastSeen[v]>=0){var g=t3-lastSeen[v]-1;perNum[v].push(g);allGaps.push(g)}lastSeen[v]=t3});
+  for(var v5=1;v5<=M;v5++){var cur=lastSeen[v5]<0?n:n-1-lastSeen[v5],gs=perNum[v5],below=gs.filter(function(g){return g<=cur}).length;
+    gaps.push({v:v5,cur:cur,avg:mean(gs),med:median(gs),max:gs.length?Math.max.apply(null,gs):null,pct:gs.length?below/gs.length:null,record:gs.length&&cur>Math.max.apply(null,gs)})}
+  // Are gaps distributed the way random drawings make them? (geometric with chance 5/M each drawing)
+  var gb=[0,0,0,0,0,0,0,0],edges=[2,5,10,15,20,30,45],gp=[];allGaps.forEach(function(g){gb[binOf(g,edges)]++});
+  var prev=0;edges.concat([Infinity]).forEach(function(e){var cdf=e===Infinity?1:1-Math.pow(1-p,e);gp.push(cdf-prev);prev=cdf});
+  out.gaps={rows:gaps,expectedAvg:(1-p)/p,test:gof(gb,gp,allGaps.length),bins:gb,binProbs:gp,edges:edges,total:allGaps.length};
+  await step(0.06,"Gaps");
+
+  // 4. Pairs and triples (observed)
+  var obs=histStats(mains,M),W=M+1,Pc=new Int32Array(W*W),Tc={};
+  mains.forEach(function(m){for(var i=0;i<5;i++)for(var j=i+1;j<5;j++){Pc[m[i]*W+m[j]]++;for(var k=j+1;k<5;k++){var key=m[i]+"-"+m[j]+"-"+m[k];Tc[key]=(Tc[key]||0)+1}}});
+  var plist=[];for(var a=1;a<W;a++)for(var b2=a+1;b2<W;b2++)if(Pc[a*W+b2])plist.push([a+"-"+b2,Pc[a*W+b2]]);plist.sort(function(x,y){return y[1]-x[1]});
+  var tlist=Object.keys(Tc).map(function(k){return [k,Tc[k]]}).sort(function(x,y){return y[1]-x[1]});
+  var nPairs=M*(M-1)/2,qPair=20/(M*(M-1)),nTrip=choose(M,3),qTrip=60/(M*(M-1)*(M-2));
+  out.combos={topPairs:plist.slice(0,10),topTriples:tlist.slice(0,8),expPair:n*qPair,expTriple:n*qTrip,nPairs:nPairs,nTriples:nTrip,
+    neverPairs:obs.neverPairs,expNeverPairs:nPairs*Math.pow(1-qPair,n),maxPair:obs.maxPair,maxTriple:obs.maxTriple};
+  await step(0.08,"Pairs and triples");
+
+  // 5+6. Patterns vs simulated random drawings, and simulated histories for "how unusual is this?"
+  var obsPat=PATTERNS.map(function(pt){return new Array(pt.labels.length).fill(0)});
+  for(var t4=0;t4<n;t4++){var s=shape(mains[t4],M);PATTERNS.forEach(function(pt,i){if(pt.bin)obsPat[i][pt.bin(s,M)]++});
+    if(t4>0){var rep=sharedCount(mains[t4],mains[t4-1]);obsPat[8][Math.min(2,rep)]++}}
+  var simPat=PATTERNS.map(function(pt){return new Array(pt.labels.length).fill(0)}),R=Math.floor(N/Math.max(n,1)),reps=[],deck=new Int32Array(M);
+  for(var dI=0;dI<M;dI++)deck[dI]=dI+1;
+  var rng=mulberry32(hashSeed(seed,"sim")),prevM=null,repBuf=[],simOddCheck=new Array(6).fill(0);
+  for(var sI=0;sI<N;sI++){
+    for(var q=0;q<5;q++){var r=q+Math.floor(rng()*(M-q)),tmp=deck[q];deck[q]=deck[r];deck[r]=tmp}
+    var mm=[deck[0],deck[1],deck[2],deck[3],deck[4]].sort(function(x,y){return x-y}),sh=shape(mm,M);
+    for(var pi=0;pi<8;pi++)simPat[pi][PATTERNS[pi].bin(sh,M)]++;
+    if(prevM){simPat[8][Math.min(2,sharedCount(mm,prevM))]++}prevM=mm;
+    if(R>0&&reps.length<R){repBuf.push(mm);if(repBuf.length===n){reps.push(histStats(repBuf,M));repBuf=[]}}
+    if((sI&4095)===0)await step(0.08+0.37*sI/N,"Simulating random drawings: "+sI.toLocaleString("en-US")+" of "+N.toLocaleString("en-US"));
+  }
+  var patterns=PATTERNS.map(function(pt,i){var tot=i===8?N-1:N,probs=simPat[i].map(function(c){return c/tot}),on=i===8?n-1:n;
+    var g=gof(obsPat[i],probs,on);return {id:pt.id,name:pt.name,labels:pt.labels,obs:obsPat[i],n:on,probs:probs,chi:g.chi,df:g.df,p:g.p,padj:g.p===null?null:Math.min(1,g.p*PATTERNS.length)}});
+  out.patterns=patterns;
+  // Simulation accuracy check: odd/even from the simulation vs exact math
+  var oddCount=Math.ceil(M/2),maxErr=0;for(var ok=0;ok<=5;ok++)maxErr=Math.max(maxErr,Math.abs(patterns[0].probs[ok]-hyper(oddCount,M,5,ok)));
+  function empP(key,val,higher){if(!reps.length)return null;var c=0;reps.forEach(function(x){var y=typeof key==="function"?key(x):x[key];if(higher?y>=val:y<=val)c++});return (c+1)/(reps.length+1)}
+  out.mc={N:N,reps:reps.length,maxErr:maxErr,
+    maxPairP:empP("maxPair",obs.maxPair,true),maxTripleP:empP("maxTriple",obs.maxTriple,true),chiP:empP("chiAdj",obs.chiAdj,true),maxZP:empP("maxZ",obs.maxZ,true),
+    neverPairsP:reps.length?Math.min(1,2*Math.min(empP("neverPairs",obs.neverPairs,true),empP("neverPairs",obs.neverPairs,false))):null,
+    stabP:reps.length?Math.min(1,2*Math.min(empP(function(x){return x.stab.r},obs.stab.r,true),empP(function(x){return x.stab.r},obs.stab.r,false))):null,
+    simMaxPairAvg:reps.length?mean(reps.map(function(x){return x.maxPair})):null,simMaxTripleAvg:reps.length?mean(reps.map(function(x){return x.maxTriple})):null};
+  out.stability={r:obs.stab.r,blocks:obs.stab.blocks,w:obs.stab.w,expected:-1/(M-1),z:obs.stab.blocks?(obs.stab.r+1/(M-1))*Math.sqrt((M-1)*obs.stab.blocks):0};
+  out.stability.p=obs.stab.blocks?pTwo(out.stability.z):null;
+
+  // 7+8+9+10. Strategy Lab: chronological train / validation / out-of-sample test, walk-forward
+  var WARM=100,usable=n-WARM;
+  if(usable<80){out.lab={tooSmall:true,need:WARM+80};}
+  else{
+    var ctx=new Ctx(hist,M,B),trEnd=WARM+Math.floor(usable*0.5),vaEnd=WARM+Math.floor(usable*0.75);
+    var base=25/M,tp=tierProbs(M,B),pPrize=tp.reduce(function(a,b){return a+b},0);
+    var lab={warm:WARM,train:[WARM,trEnd],val:[trEnd,vaEnd],test:[vaEnd,n],K:K,base:base,tierProbs:tp,pPrize:pPrize,
+      dates:{train:[hist[WARM].d,hist[trEnd-1].d],val:[hist[trEnd].d,hist[vaEnd-1].d],test:[hist[vaEnd].d,hist[n-1].d]},strats:{}};
+    var jobs=0,totalJobs=0;STRAT_ORDER.forEach(function(id){totalJobs+=STRATS[id].params.length+2});
+    var checkTs={};[vaEnd,Math.floor((vaEnd+n)/2),n-1].forEach(function(t){checkTs[t]=1});
+    for(var si=0;si<STRAT_ORDER.length;si++){
+      var id=STRAT_ORDER[si],st=STRATS[id],tr=[];
+      for(var pj=0;pj<st.params.length;pj++){
+        await step(0.45+0.5*jobs/totalJobs,"Strategy Lab: training "+st.name);
+        var rr=walk(ctx,id,st.params[pj],WARM,trEnd,K,seed,null);tr.push({param:st.params[pj],label:paramLabel(id,st.params[pj]),mean:mean(rr.perDraw)});jobs++;
+      }
+      var best=tr.slice().sort(function(a,b){return b.mean-a.mean})[0];
+      await step(0.45+0.5*jobs/totalJobs,"Strategy Lab: validating "+st.name);
+      var va=walk(ctx,id,best.param,trEnd,vaEnd,K,seed,null);jobs++;
+      await step(0.45+0.5*jobs/totalJobs,"Strategy Lab: out-of-sample test of "+st.name);
+      var te=walk(ctx,id,best.param,vaEnd,n,K,seed,checkTs);jobs++;
+      lab.strats[id]={id:id,name:st.name,desc:st.desc,training:tr,chosen:best.label,chosenParam:best.param,val:va,test:te,
+        valCmp:compare(va,base),testCmp:compare(te,base)};
+    }
+    // Compare each strategy with Pure Random on the very same test drawings, plus prize rate vs exact chance
+    var rnd=lab.strats.random,m=STRAT_ORDER.length-1;
+    STRAT_ORDER.forEach(function(id){var s=lab.strats[id];
+      s.vsRandom=id==="random"?null:comparePaired(s.test.perDraw,rnd.test.perDraw);
+      s.prizeCmp=compare({perDraw:s.test.perDrawPrize},pPrize);
+      s.testCmp.padj=id==="random"?s.testCmp.p:Math.min(1,s.testCmp.p*m);
+      s.prizeCmp.padj=id==="random"?s.prizeCmp.p:Math.min(1,s.prizeCmp.p*m);
+      var c=s.testCmp,v=s.valCmp;
+      if(id==="random")s.verdict={cls:"ctrl",label:Math.abs(c.z)<2.5?"Baseline OK":"Baseline drift",text:"Pure Random should land close to the exact chance figure. It's the check that the test itself is fair."};
+      else if(c.padj<0.05&&c.diff>0&&v.diff>0&&s.vsRandom.lo>0)s.verdict={cls:"luck",label:"Possible edge",text:"Beat chance on the out-of-sample test, after correcting for testing "+m+" strategies, and was also ahead on validation. Treat with great caution and recheck as new drawings arrive."};
+      else if(c.padj<0.05&&c.diff<0)s.verdict={cls:"stand",label:"Below chance",text:"Did worse than chance on the test period. A number-picking method can't make numbers less likely, so this is almost certainly luck."};
+      else s.verdict={cls:"same",label:"No evidence",text:"No convincing evidence this strategy beats random picks. Its test result is within the range luck produces."}});
+    lab.anyEdge=STRAT_ORDER.some(function(id){return id!=="random"&&lab.strats[id].verdict.label==="Possible edge"});
+    // No-look-ahead check: rebuild with history cut off AT each test drawing; picks must be identical.
+    var checks=[],allOk=true;
+    ["hybrid","pairs","frequency"].forEach(function(id){var s=lab.strats[id];Object.keys(s.test.rec).forEach(function(tk){var t=Number(tk);
+      var ctx2=new Ctx(hist.slice(0,t),M,B),again=makeTickets(new View(ctx2,t),id,s.chosenParam,K,seed,false).map(function(x){return x.m.join("-")+"+"+x.b});
+      var same=again.join()===s.test.rec[tk].join();if(!same)allOk=false;checks.push({id:id,date:hist[t].d,same:same})})});
+    lab.leakCheck={ok:allOk,checks:checks.length};
+    out.lab=lab;
+  }
+  host.progress(0.97,"Diversification check");
+
+  // 11. Diversification opportunities on the current history
+  var vNow=new View(new Ctx(hist,M,B),n),divOut={};
+  [5,10].forEach(function(k){var h1=makeTickets(vNow,"hybrid",0.5,k,seed,false),h2=makeTickets(vNow,"divhybrid",0.5,k,seed,false);
+    divOut[k]={hybrid:setStats(h1.map(function(x){return {main:x.m,bonus:x.b}}),M,B),div:setStats(h2.map(function(x){return {main:x.m,bonus:x.b}}),M,B)}});
+  out.diversify=divOut;
+  host.progress(1,"Done");
+  return out;
+}
+
+// ---------- Ticket set analysis (used by Ticket Builder, Smart Picks 2.0 and Analyze My Tickets) ----------
+function setStats(tickets,M,B){
+  var k=tickets.length,nums={},bon={},pairMap={},overl=[],maxShared=0,dupes=[],seen={};
+  tickets.forEach(function(t,i){var key=t.main.join("-")+"+"+t.bonus;if(seen[key]!=null)dupes.push([seen[key]+1,i+1]);else seen[key]=i;
+    t.main.forEach(function(v){nums[v]=(nums[v]||0)+1});bon[t.bonus]=(bon[t.bonus]||0)+1;
+    for(var a=0;a<5;a++)for(var b=a+1;b<5;b++){var pk=t.main[a]+"-"+t.main[b];pairMap[pk]=(pairMap[pk]||0)+1}});
+  var heavy=[];
+  for(var i=0;i<k;i++)for(var j=i+1;j<k;j++){var sh=sharedCount(tickets[i].main,tickets[j].main);overl.push(sh);if(sh>maxShared)maxShared=sh;if(sh>=3)heavy.push([i+1,j+1,sh])}
+  var repPairs=Object.keys(pairMap).filter(function(p){return pairMap[p]>1}).map(function(p){return [p,pairMap[p]]}).sort(function(a,b){return b[1]-a[1]});
+  var bday=0,odd=0,low=0,lowMax=Math.floor(M/2),sigs={},ticketsHeavyBday=0;
+  tickets.forEach(function(t){var bd=0;t.main.forEach(function(v){if(v<=31){bday++;bd++}if(v%2)odd++;if(v<=lowMax)low++});if(bd>=4)ticketsHeavyBday++;
+    var s=shape(t.main,M),sig=s.odd+"o"+s.low+"l"+binOf(s.sum,shapeInfo(M).sumEdges);sigs[sig]=(sigs[sig]||0)+1});
+  var maxSig=0;Object.keys(sigs).forEach(function(s){if(sigs[s]>maxSig)maxSig=sigs[s]});
+  return {k:k,unique:Object.keys(nums).length,M:M,maxUnique:Math.min(M,5*k),avgOverlap:overl.length?mean(overl):0,maxShared:maxShared,heavy:heavy,
+    pairsCovered:Object.keys(pairMap).length,pairSlots:10*k,repPairs:repPairs,dupes:dupes,
+    bonusUnique:Object.keys(bon).length,maxBonusUnique:Math.min(B,k),B:B,
+    bdayShare:k?bday/(5*k):0,bdayExpected:Math.min(31,M)/M,ticketsHeavyBday:ticketsHeavyBday,
+    oddShare:k?odd/(5*k):0,oddExpected:Math.ceil(M/2)/M,lowShare:k?low/(5*k):0,lowExpected:lowMax/M,
+    sameShapeMax:maxSig,shapes:Object.keys(sigs).length,
+    crowd:tickets.map(function(t){return crowdIssues(t.main)})};
+}
+// Builds tickets covering as many different numbers (and bonus numbers) as possible.
+function coverageTickets(k,M,B,rng){
+  var tickets=[],deck=[],bdeck=[],pairUse={};
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1)),x=a[i];a[i]=a[j];a[j]=x}return a}
+  for(var t=0;t<k;t++){
+    if(deck.length<5){var rest=[];for(var v=1;v<=M;v++)if(deck.indexOf(v)<0)rest.push(v);deck=deck.concat(shuffle(rest))}
+    var m=[];
+    while(m.length<5){var bestI=0,bestS=Infinity;for(var i=0;i<deck.length;i++){if(m.indexOf(deck[i])>=0)continue;var s=0;
+        for(var q=0;q<m.length;q++){var a=Math.min(m[q],deck[i]),b=Math.max(m[q],deck[i]);s+=pairUse[a+"-"+b]||0}
+        if(s<bestS){bestS=s;bestI=i;if(s===0)break}}
+      m.push(deck[bestI]);deck.splice(bestI,1)}
+    m.sort(function(a,b){return a-b});
+    for(var x=0;x<5;x++)for(var y=x+1;y<5;y++){var pk=m[x]+"-"+m[y];pairUse[pk]=(pairUse[pk]||0)+1}
+    if(!bdeck.length){for(var u=1;u<=B;u++)bdeck.push(u);shuffle(bdeck)}
+    tickets.push({main:m,bonus:bdeck.pop()});
+  }
+  return tickets;
+}
+// Suggests the smallest changes that reduce overlap. Never alters the input.
+function diversify(tickets,M,B,rng,maxShare){
+  var out=tickets.map(function(t){return {main:t.main.slice(),bonus:t.bonus,changed:[]}}),k=out.length;
+  maxShare=maxShare==null?(k*5<=M?0:1):maxShare;
+  function useCount(){var c=new Array(M+1).fill(0);out.forEach(function(t){t.main.forEach(function(v){c[v]++})});return c}
+  for(var i=1;i<k;i++){
+    var guard=0;
+    while(guard++<10){var worst=-1,ws=-1;
+      for(var j=0;j<i;j++){var s=sharedCount(out[i].main,out[j].main);if(s>maxShare&&s>ws){ws=s;worst=j}}
+      if(worst<0)break;
+      var common=out[i].main.filter(function(v){return out[worst].main.indexOf(v)>=0}),drop=common[Math.floor(rng()*common.length)];
+      var c=useCount(),best=[],bc=Infinity;for(var v=1;v<=M;v++){if(out[i].main.indexOf(v)>=0)continue;if(c[v]<bc){bc=c[v];best=[v]}else if(c[v]===bc)best.push(v)}
+      var nv=best[Math.floor(rng()*best.length)],idx=out[i].main.indexOf(drop);out[i].main[idx]=nv;out[i].main.sort(function(a,b){return a-b});out[i].changed.push([drop,nv])}
+    var bUsed=out.slice(0,i).map(function(t){return t.bonus});
+    if(i<B&&bUsed.indexOf(out[i].bonus)>=0){var free=[];for(var u=1;u<=B;u++)if(bUsed.indexOf(u)<0&&u!==out[i].bonus)free.push(u);
+      if(free.length){var nb=free[Math.floor(rng()*free.length)];out[i].changed.push(["B"+out[i].bonus,"B"+nb]);out[i].bonus=nb}}
+  }
+  return out;
+}
+
+return {runDeep:runDeep,Ctx:Ctx,View:View,STRATS:STRATS,STRAT_ORDER:STRAT_ORDER,makeTickets:makeTickets,walk:walk,setStats:setStats,
+  coverageTickets:coverageTickets,diversify:diversify,crowdIssues:crowdIssues,isBalanced:isBalanced,shape:shape,shapeInfo:shapeInfo,
+  mulberry32:mulberry32,hashSeed:hashSeed,uniform5:uniform5,tierProbs:tierProbs,TIERS:TIERS,paramLabel:paramLabel,compare:compare,hyper:hyper,chiP:chiP,gof:gof};
+})();
+if(typeof self!=="undefined"&&typeof self.postMessage==="function"&&typeof document==="undefined"){
+  self.onmessage=function(e){var cancelled=false;
+    LMA_LAB.runDeep(e.data,{progress:function(f,m){self.postMessage({type:"progress",f:f,msg:m})},yieldNow:function(){return Promise.resolve()},cancelled:function(){return cancelled}})
+      .then(function(r){self.postMessage({type:"done",result:r})}).catch(function(err){self.postMessage({type:"error",msg:String(err&&err.message||err)})});};
+}
+if(typeof module!=="undefined")module.exports=LMA_LAB;
+
+</script>
 <script>
 (function(){
   "use strict";
@@ -638,7 +1253,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
   var MAXANY=75;
 
   // ---------- State ----------
-  var APP_VERSION="1.0";
+  var APP_VERSION="1.2.1";
   // Inside Claude the page runs in a frame with window.claude; on your own website it runs on its own.
   var IN_CLAUDE=!!(window.claude&&window.claude.use);
   var store={powerball:new Map(), megamillions:new Map()};  // "YYYY-MM-DD" -> {main:[5], bonus:n}
@@ -652,7 +1267,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
        var av=localStorage.getItem("lma.v2.anView"); if(av==="numbers"||av==="patterns") anView=av;
        var si=localStorage.getItem("lma.v2.strat"); if(si) stratId=si;
        var lb=localStorage.getItem("lma.v2.lookback"); if(["25","50","100","all"].indexOf(lb)>=0) lookback=lb;
-       if(v==="picks"||v==="backtest"||v==="tickets") view=v; }catch(e){}
+       if(v==="picks"||v==="backtest"||v==="tickets"||v==="deep"||v==="mytix") view=v; }catch(e){}
 
   try{ var g=localStorage.getItem("lma.v2.selectedGame"); if(GAMES[g]) game=g; }catch(e){}
 
@@ -1462,10 +2077,14 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
 
   var TB_METHODS=STRATEGIES.map(function(st){return {id:st.id,name:st.name,desc:st.desc}})
     .concat([{id:"random",name:"Random Control",desc:"Completely random. No history used."},
-             {id:"mixed",name:"Mixed Strategies",desc:"Takes turns between all 6 Smart Pick strategies."}]);
-  function methodName(id){for(var i=0;i<TB_METHODS.length;i++)if(TB_METHODS[i].id===id)return TB_METHODS[i].name;return id}
+             {id:"mixed",name:"Mixed Strategies",desc:"Takes turns between all 6 Smart Pick strategies."},
+             {id:"maxdiv",name:"Maximum Diversification",desc:"Covers as many different white balls and bonus numbers as possible, with as little overlap as possible. Doesn't change any ticket's odds."}]);
+  function methodName(id){for(var i=0;i<TB_METHODS.length;i++)if(TB_METHODS[i].id===id)return TB_METHODS[i].name;
+    for(var j=0;j<SP2_METHODS.length;j++)if("sp2-"+SP2_METHODS[j].id===id)return "Smart Picks 2.0: "+SP2_METHODS[j].name;
+    if(id==="diversified")return "Diversified copy";if(id==="pasted")return "Your ticket";return id}
   function ticketTotal(){return tbCount==="custom"?Math.max(1,Math.min(100,Math.round(tbCustom)||1)):Number(tbCount)}
   function activeMethodIds(){
+    if(tbMethods.indexOf("maxdiv")>=0) return ["maxdiv"];
     if(tbMethods.indexOf("mixed")>=0) return STRATEGIES.map(function(st){return st.id});
     return tbMethods.filter(function(id){return id!=="mixed"});
   }
@@ -1474,6 +2093,13 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
   // Builds the set using the same strategy code as Smart Picks. Never repeats a combination,
   // and tries to keep tickets from sharing too many white balls.
   function buildTickets(gid,methodIds,total,lb,rng){
+    if(methodIds[0]==="maxdiv"){
+      var cur=GAMES[gid].eras[GAMES[gid].eras.length-1];
+      var cov=LMA_LAB.coverageTickets(total,cur.mainMax,cur.bonusMax,rng).map(function(t){return {main:t.main,bonus:t.bonus,method:"maxdiv",
+        notes:["Chosen to cover white balls the other tickets in this set don't use, while avoiding repeated pairs.","Bonus "+t.bonus+": spread so tickets use different bonus numbers where possible.","This only reduces overlap between your tickets. Each ticket has exactly the same odds as any other."]}});
+      var ms=0;for(var a=0;a<cov.length;a++)for(var b=a+1;b<cov.length;b++)ms=Math.max(ms,shared(cov[a].main,cov[b].main));
+      return {gid:gid,tickets:cov,maxShared:ms,lb:lb,created:new Date().toISOString(),saved:false};
+    }
     var ctx=buildContext(gid,"9999-12-31"), tickets=[], seen=new Set();
     var order=methodIds.slice(), start=Math.floor(rng()*order.length);
     for(var t=0;t<total;t++){
@@ -1636,6 +2262,351 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     btn.textContent=label;btn.disabled=false;
   }
 
+  // ----- Shared drawing history: everyone who opens the website gets it automatically -----
+  // The files live on the website (and in its GitHub repository, which a GitHub Action keeps current).
+  // Only drawings you don't already have are added; nothing you stored is ever changed or removed.
+  var SHARED_SOURCES={
+    powerball:["powerball.csv","https://raw.githubusercontent.com/mildperfume-boop/lottomoneyanalyzer.com/main/powerball.csv"],
+    megamillions:["megamillions.csv","https://raw.githubusercontent.com/mildperfume-boop/lottomoneyanalyzer.com/main/megamillions.csv"]
+  };
+  var lastSharedCheck=0;
+  function parseFor(gid,text){var prev=game;game=gid;try{return parseText(text)}finally{game=prev}}
+  async function fetchText(url){
+    var r=await fetch(url,{cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    return r.text();
+  }
+  async function loadSharedHistory(){
+    if(IN_CLAUDE) return;                       // the Claude version uses your account instead
+    if(Date.now()-lastSharedCheck<30*60*1000) return;
+    lastSharedCheck=Date.now();
+    var added=0, reached=false;
+    for(var gi=0;gi<ORDER.length;gi++){
+      var gid=ORDER[gi], srcs=SHARED_SOURCES[gid], before=store[gid].size;
+      for(var si=0;si<srcs.length;si++){
+        try{
+          var text=await fetchText(srcs[si]); reached=true;
+          var out=parseFor(gid,text);
+          if(out.report.wrongGame) continue;
+          out.batch.forEach(function(v,k){if(!store[gid].has(k))store[gid].set(k,v)});
+        }catch(e){}
+      }
+      if(store[gid].size>before){added+=store[gid].size-before;saveLocal(gid)}
+    }
+    var el=document.getElementById("autoMsg");
+    if(reached){
+      el.hidden=false;
+      el.textContent=added?("Drawing history updated automatically: "+plural(added,"new drawing")+" added."):"Drawing history is up to date. It updates automatically from lottomoneyanalyzer.com.";
+    }
+    if(added) renderAll(true);
+  }
+
+
+  // ================= Automatic winning-numbers updater =================
+  // 1st choice: the New York Lottery's official public results (data.ny.gov). The site allows
+  //   web pages to read it, and the query asks ONLY for drawings newer than the newest one stored.
+  // 2nd choice: this website's own CSV copies (kept current by a GitHub Action in the repository).
+  // Nothing is added unless it passes every check, and nothing already stored is ever changed.
+  var NY_SOURCES={powerball:"https://data.ny.gov/resource/d6yy-54nr.json",megamillions:"https://data.ny.gov/resource/5xaw-6ayf.json"};
+  var UPD_KEY="lma.v2.updater";
+  var upd={lastChecked:0,lastSuccess:0,lastAdded:null,status:{powerball:"none",megamillions:"none"},autoAdd:false,live:{powerball:null,megamillions:null}};
+  try{var us=JSON.parse(localStorage.getItem(UPD_KEY)||"null");
+      if(us&&typeof us==="object"){["lastChecked","lastSuccess"].forEach(function(k){if(typeof us[k]==="number")upd[k]=us[k]});
+        if(typeof us.lastAdded==="number")upd.lastAdded=us.lastAdded; upd.autoAdd=us.autoAdd===true;
+        if(us.status)ORDER.forEach(function(g){if(["ok","fail","none"].indexOf(us.status[g])>=0)upd.status[g]=us.status[g]});
+        if(us.live&&typeof us.live==="object")ORDER.forEach(function(g){var L=us.live[g];if(L&&typeof L==="object")upd.live[g]=L})}}catch(e){}
+  function saveUpd(){try{localStorage.setItem(UPD_KEY,JSON.stringify(upd))}catch(e){}}
+  var updBusy=false, updFound=null;
+
+  function fmtStampMs(ms){
+    if(!ms) return "";
+    return new Date(ms).toLocaleString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"});
+  }
+  // Fetch that remembers WHY it failed, so the app can tell you the real reason.
+  async function fetchWithTimeout(url,opts,ms){
+    var ctl=("AbortController" in window)?new AbortController():null, t=null;
+    if(ctl){opts=Object.assign({},opts,{signal:ctl.signal});t=setTimeout(function(){ctl.abort()},ms||15000)}
+    try{
+      var r;
+      try{r=await fetch(url,opts)}
+      catch(e){var err=new Error(e&&e.name==="AbortError"?"timeout":"network");err.kind=err.message;throw err}
+      if(!r.ok){var he=new Error("HTTP "+r.status);he.kind="http";he.status=r.status;throw he}
+      return r;
+    }finally{if(t)clearTimeout(t)}
+  }
+  function reasonText(e){
+    if(IN_CLAUDE) return "this copy is running inside the Claude app, which blocks connections to other websites. Live updates work in the Home Screen app at lottomoneyanalyzer.com";
+    if(navigator.onLine===false) return "this device has no internet connection right now";
+    var k=e&&e.kind;
+    if(k==="timeout") return "the source didn't answer within 15 seconds";
+    if(k==="http") return "the source answered with an error (HTTP "+e.status+")"+(e.status===429?", meaning too many requests; try again in a few minutes":"");
+    if(k==="format") return "the source's data came back in an unexpected format, so nothing from it was trusted";
+    if(k==="network") return "the connection failed. A browser can't tell exactly why: it can be weak internet, a content blocker, or the source refusing cross-site access (CORS)";
+    return "an unexpected error ("+(e&&e.message||"unknown")+")";
+  }
+  function fmtErr(kind){var e=new Error(kind);e.kind=kind;return e}
+  // Every rule a drawing must pass before it can be stored. Returns a problem, or "" if it's good.
+  function checkDrawing(gid,d){
+    var G=GAMES[gid];
+    if(!d||typeof d.date!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(d.date)) return "missing or unreadable date";
+    var p=d.date.split("-").map(Number);
+    if(!validDate(p[0],p[1],p[2])) return d.date+" is not a real date";
+    if(d.date>todayIso()) return fmtDate(d.date)+" is in the future";
+    var e=eraFor(gid,d.date); if(!e) return fmtDate(d.date)+" is before "+G.name+"'s supported rules";
+    if(G.days.indexOf(weekday(d.date))<0) return fmtDate(d.date)+" is not a "+G.name+" drawing day";
+    if(!Array.isArray(d.main)||d.main.length!==5) return fmtDate(d.date)+": needs exactly 5 white balls";
+    if(d.main.some(function(v){return !Number.isInteger(v)||v<1||v>e.era.mainMax})) return fmtDate(d.date)+": a white ball is outside 1 to "+e.era.mainMax;
+    if(new Set(d.main).size!==5) return fmtDate(d.date)+": a white ball repeats";
+    if(!Number.isInteger(d.bonus)||d.bonus<1||d.bonus>e.era.bonusMax) return fmtDate(d.date)+": the "+G.bonusName+" is outside 1 to "+e.era.bonusMax;
+    return "";
+  }
+  function toNum(x){var s=String(x==null?"":x).trim();return /^\d{1,2}$/.test(s)?Number(s):NaN}
+  // Reads the official data. Powerball rows list 6 numbers (the last is the Powerball);
+  // Mega Millions rows list 5 numbers plus a separate mega_ball field.
+  function readOfficialRows(gid,rows){
+    if(!Array.isArray(rows)) throw fmtErr("format");
+    var out=[], bad=0;
+    rows.forEach(function(row){
+      if(!row||typeof row!=="object"){bad++;return}
+      var date=String(row.draw_date||"").slice(0,10);
+      var nums=String(row.winning_numbers||"").trim().split(/\s+/).map(toNum), main, bonus;
+      if(gid==="powerball"&&nums.length===6){main=nums.slice(0,5);bonus=nums[5]}
+      else if(gid==="megamillions"&&nums.length===5&&row.mega_ball!=null){main=nums;bonus=toNum(row.mega_ball)}
+      else if(gid==="megamillions"&&nums.length===6&&row.mega_ball==null){main=nums.slice(0,5);bonus=nums[5]}
+      else{bad++;return}
+      out.push({date:date,main:main,bonus:bonus});
+    });
+    if(rows.length&&!out.length) throw fmtErr("format");   // the source changed shape: don't trust it
+    return {list:out,bad:bad};
+  }
+  async function jsonOf(r){try{return await r.json()}catch(e){throw fmtErr("format")}}
+  async function fromOfficial(gid){
+    if(IN_CLAUDE) throw fmtErr("blocked");
+    var keys=sortedDates(gid), after=keys.length?keys[keys.length-1]:"2000-01-01";
+    // 1) Ask the live source for its newest drawing.
+    var u1=NY_SOURCES[gid]+"?$order="+encodeURIComponent("draw_date DESC")+"&$limit=1";
+    var top=readOfficialRows(gid,await jsonOf(await fetchWithTimeout(u1,{cache:"no-store",credentials:"omit"},15000))).list;
+    var latest=top.length?top[0]:null;
+    if(!latest) throw fmtErr("format");
+    // 2) Only if it has something newer than what's stored, fetch everything you're missing.
+    var list=[];
+    if(latest.date>after){
+      var u2=NY_SOURCES[gid]+"?$where="+encodeURIComponent("draw_date > '"+after+"T00:00:00.000'")+"&$order="+encodeURIComponent("draw_date ASC")+"&$limit=2000";
+      list=readOfficialRows(gid,await jsonOf(await fetchWithTimeout(u2,{cache:"no-store",credentials:"omit"},15000))).list;
+    }
+    return {list:list,latest:latest};
+  }
+  async function fromWebsiteCopy(gid){
+    var urls=SHARED_SOURCES[gid].slice();
+    if(IN_CLAUDE||!/^https?:$/.test(location.protocol)) urls=urls.filter(function(u){return /^https:/.test(u)});
+    var lastErr=null;
+    for(var i=0;i<urls.length;i++){
+      try{
+        var r=await fetchWithTimeout(urls[i],{cache:"no-store",credentials:"omit"},15000);   // always a fresh download, never an old saved copy
+        var text=await r.text(), out=parseFor(gid,text);
+        if(out.report.wrongGame||out.report.seen<1) throw fmtErr("format");
+        var list=[]; out.batch.forEach(function(v,k){list.push({date:k,main:v.main.slice(),bonus:v.bonus})});
+        // Newest drawing in the file, whether or not you already have it (read against an empty list).
+        var keep=store[gid], all=null, latest=null;
+        try{store[gid]=new Map();all=parseFor(gid,text)}finally{store[gid]=keep}
+        all.batch.forEach(function(v,k){if(!latest||k>latest.date)latest={date:k,main:v.main.slice(),bonus:v.bonus}});
+        return {list:list,latest:latest};
+      }catch(e){lastErr=e}
+    }
+    throw lastErr||fmtErr("network");
+  }
+  // Checks one game. Returns the verified drawings you don't have yet; never touches stored data.
+  async function checkGame(gid){
+    var res=null, source="", why1="", why2="";
+    try{res=await fromOfficial(gid);source="official"}catch(e){
+      why1=reasonText(e);
+      if(IN_CLAUDE) return {ok:false,reason:why1};
+      try{res=await fromWebsiteCopy(gid);source="website"}catch(e2){
+        why2=reasonText(e2);
+        return {ok:false,reason:"New York official results: "+why1+". Website copy: "+why2+"."};
+      }
+    }
+    var list=res.list;
+    var have=store[gid], found=new Map(), rejected=[], conflicts=[];
+    list.forEach(function(d){
+      var problem=checkDrawing(gid,d);
+      if(problem){rejected.push(problem);return}
+      var main=d.main.slice().sort(function(a,b){return a-b});
+      if(have.has(d.date)){
+        var old=have.get(d.date);
+        if(old.main.join()!==main.join()||old.bonus!==d.bonus) conflicts.push(fmtDate(d.date));
+        return;                                   // already stored: never overwritten
+      }
+      if(found.has(d.date)) return;
+      found.set(d.date,{main:main,bonus:d.bonus});
+    });
+    if(res.latest&&have.has(res.latest.date)){
+      var o=have.get(res.latest.date), lm=res.latest.main.slice().sort(function(a,b){return a-b});
+      if((o.main.join()!==lm.join()||o.bonus!==res.latest.bonus)&&conflicts.indexOf(fmtDate(res.latest.date))<0) conflicts.push(fmtDate(res.latest.date));
+    }
+    return {ok:true,source:source,found:found,rejected:rejected,conflicts:conflicts,latest:res.latest,fallbackWhy:why1};
+  }
+  async function addVerified(foundByGame){
+    var added=0, saveTrouble=false;
+    for(var gi=0;gi<ORDER.length;gi++){
+      var gid=ORDER[gi], f=foundByGame[gid]; if(!f||!f.size) continue;
+      var years=new Set(), k=0;
+      f.forEach(function(rec,date){
+        if(store[gid].has(date)) return;          // added some other way meanwhile
+        if(checkDrawing(gid,{date:date,main:rec.main,bonus:rec.bonus})) return;
+        store[gid].set(date,{main:rec.main.slice(),bonus:rec.bonus}); years.add(date.slice(0,4)); k++;
+      });
+      if(!k) continue;
+      added+=k;
+      if(!saveLocal(gid)) saveTrouble=true;
+      if(cloud&&!(await saveCloudYears(gid,Array.from(years)))) saveTrouble=true;
+      // Results made from the older history are cleared, so new picks and back-tests include the new drawing.
+      delete lastSmart[gid]; delete btResults[gid]; delete sp2Set[gid];
+    }
+    return {added:added,saveTrouble:saveTrouble};
+  }
+  function setUpdMsg(text,cls){var el=document.getElementById("updMsg");el.textContent=text||"";el.className="updmsg"+(cls?" "+cls:"")}
+  function setUpdHtml(html,cls){var el=document.getElementById("updMsg");el.innerHTML=html||"";el.className="updmsg"+(cls?" "+cls:"")}
+  var SOURCE_LABEL={official:"New York Lottery official results (data.ny.gov)",website:"lottomoneyanalyzer.com copy (GitHub, from the Texas Lottery)"};
+  // The most recent drawing that should already have happened, using the official draw times
+  // (Powerball 10:59 p.m. ET, Mega Millions 11:00 p.m. ET, plus 15 minutes).
+  function expectedLatest(gid,nowMs){
+    var parts={};
+    try{new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"})
+      .formatToParts(new Date(nowMs||Date.now())).forEach(function(p){parts[p.type]=p.value})}catch(e){return null}
+    var y=+parts.year,mo=+parts.month,d=+parts.day,mins=(+parts.hour)*60+(+parts.minute);
+    for(var back=0;back<8;back++){
+      var dt=new Date(Date.UTC(y,mo-1,d-back)), k=iso(dt.getUTCFullYear(),dt.getUTCMonth()+1,dt.getUTCDate());
+      if(GAMES[gid].days.indexOf(dt.getUTCDay())<0) continue;
+      if(back===0&&mins<23*60+15) continue;
+      return k;
+    }
+    return null;
+  }
+  function comboText(gid,rec){return rec.main.join(" ")+" + "+(gid==="powerball"?"PB ":"MB ")+rec.bonus}
+  function ballsFor(gid,rec){
+    var G=GAMES[gid];
+    return rec.main.map(function(v){return '<span class="ball">'+v+'</span>'}).join("")+'<span class="ball bonus '+G.bonusClass+'">'+rec.bonus+'</span>';
+  }
+  function renderUpdater(){
+    var btn=document.getElementById("updBtn"); if(!btn) return;
+    btn.disabled=updBusy; btn.textContent=updBusy?"🔄 Checking for new drawings…":"🔄 UPDATE WINNING NUMBERS";
+    document.getElementById("updLast").textContent=upd.lastSuccess?fmtStampMs(upd.lastSuccess):"Not yet";
+    [["powerball","updPbDate","updPbBalls"],["megamillions","updMmDate","updMmBalls"]].forEach(function(x){
+      var keys=sortedDates(x[0]), k=keys[keys.length-1];
+      document.getElementById(x[1]).textContent=k?fmtDate(k):"None stored";
+      document.getElementById(x[2]).innerHTML=k?ballsFor(x[0],store[x[0]].get(k)):"";
+    });
+    document.getElementById("updCount").textContent=upd.lastAdded==null?"—":n(upd.lastAdded);
+    var label={ok:"Connected",fail:"Failed",none:"Not Checked"};
+    [["powerball","dsPb"],["megamillions","dsMm"]].forEach(function(x){
+      var st=upd.status[x[0]], el=document.getElementById(x[1]);
+      el.textContent=label[st]; el.className="pill"+(st==="ok"?" ok":st==="fail"?" bad":"");
+    });
+    document.getElementById("dsLast").textContent=upd.lastSuccess?fmtStampMs(upd.lastSuccess):"Never";
+    var pk=sortedDates("powerball"), mk=sortedDates("megamillions");
+    document.getElementById("dsStored").textContent="Powerball "+(pk.length?fmtDate(pk[pk.length-1]):"none")+", Mega Millions "+(mk.length?fmtDate(mk[mk.length-1]):"none");
+    document.getElementById("setAutoAdd").checked=upd.autoAdd;
+    var okTimes=ORDER.map(function(g){var L=upd.live[g];return L&&L.ok?L.checkedAt:0});
+    var lastOk=Math.max.apply(null,okTimes);
+    document.getElementById("liveWhen").textContent=lastOk?fmtStampMs(lastOk):"Not yet";
+    var srcs=[];ORDER.forEach(function(g){var L=upd.live[g];if(L&&L.ok&&srcs.indexOf(SOURCE_LABEL[L.source])<0)srcs.push(SOURCE_LABEL[L.source])});
+    document.getElementById("liveSource").textContent=srcs.length?srcs.join("; "):(upd.live.powerball||upd.live.megamillions?"Couldn't reach a source on the last check":"—");
+    [["powerball","livePb"],["megamillions","liveMm"]].forEach(function(x){
+      var L=upd.live[x[0]], el=document.getElementById(x[1]);
+      if(!L){el.textContent="—";return}
+      if(!L.ok){el.innerHTML=esc("Not checked: "+L.reason);return}
+      el.innerHTML=L.latest?esc(fmtDate(L.latest.date,true)+": "+comboText(x[0],L.latest))+'<span class="src">checked '+esc(fmtStampMs(L.checkedAt))+'</span>':"No drawings returned";
+    });
+    var box=document.getElementById("updNew"), total=0, items=[];
+    if(updFound) ORDER.forEach(function(gid){
+      var f=updFound[gid]; if(!f) return;
+      f.forEach(function(rec,date){if(!store[gid].has(date)){total++;items.push(GAMES[gid].name+", "+fmtDate(date,true)+": "+comboText(gid,rec))}});
+    });
+    box.hidden=!total;
+    if(total){
+      document.getElementById("updNewList").innerHTML=items.slice(0,6).map(function(t){return "<li>"+esc(t)+"</li>"}).join("")+(items.length>6?"<li>…and "+n(items.length-6)+" more</li>":"");
+      document.getElementById("updAddBtn").textContent=total===1?"ADD NEW DRAWING":"ADD "+n(total)+" NEW DRAWINGS";
+    }
+  }
+  // Both modes do a real live check. New drawings are shown (date + numbers) and saved only when you
+  // tap ADD, or right away if "Automatically add verified new drawings" is on. Stored drawings are never changed.
+  var pendingTimer=null;
+  async function runUpdate(mode){
+    if(updBusy) return;
+    updBusy=true; renderUpdater();
+    if(mode==="button") setUpdMsg("Checking the live source…");
+    var results={};
+    var arr=navigator.onLine===false?ORDER.map(function(){return {ok:false,reason:"this device has no internet connection right now"}}):
+      await Promise.all(ORDER.map(function(g){return checkGame(g).catch(function(e){return {ok:false,reason:reasonText(e)}})}));
+    ORDER.forEach(function(g,i){results[g]=arr[i]});
+    var now=Date.now(); upd.lastChecked=now;
+    var found={}, total=0, lines=[], cls="ok", anyPending=false, anyFail=false;
+    ORDER.forEach(function(g){
+      var r=results[g], G=GAMES[g];
+      upd.status[g]=r.ok?"ok":"fail";
+      if(!r.ok){
+        anyFail=true;
+        upd.live[g]={ok:false,checkedAt:now,reason:r.reason};
+        lines.push("<b>"+esc(G.name)+":</b> couldn't check for new drawings, because "+esc(r.reason)+" Your saved drawings were not changed.");
+        return;
+      }
+      upd.live[g]={ok:true,checkedAt:now,source:r.source,latest:r.latest?{date:r.latest.date,main:r.latest.main.slice().sort(function(a,b){return a-b}),bonus:r.latest.bonus}:null};
+      found[g]=r.found; total+=r.found.size;
+      var keys=sortedDates(g), mine=keys[keys.length-1], exp=expectedLatest(g,now), srcLatest=r.latest?r.latest.date:null;
+      var via=" (checked "+SOURCE_LABEL[r.source]+(r.source==="website"?", because the official source failed: "+r.fallbackWhy:"")+")";
+      if(r.found.size){
+        var items=[];r.found.forEach(function(rec,date){items.push(fmtDate(date,true)+": "+comboText(g,rec))});
+        lines.push("<b>"+esc(G.name)+":</b> "+plural(r.found.size,"new verified drawing")+" found: "+esc(items.join("; "))+esc(via));
+      }else if(exp&&srcLatest&&srcLatest<exp&&(!mine||mine<exp)){
+        anyPending=true;
+        lines.push("<b>"+esc(G.name)+":</b> not updated yet. The "+esc(fmtDate(exp,true))+" drawing has taken place, but the source hasn't published it. Its newest drawing is "+esc(fmtDate(srcLatest,true))+", which you already have. New York usually posts results a few hours after a drawing, often overnight. The app will check again automatically."+esc(via));
+      }else{
+        lines.push("<b>"+esc(G.name)+":</b> up to date. The source's newest drawing is "+(srcLatest?esc(fmtDate(srcLatest,true)):"unknown")+", and you have it."+esc(via));
+      }
+      r.conflicts.forEach(function(c){lines.push(esc(G.name+" "+c+": the source's numbers differ from yours. Your stored numbers were kept unchanged."))});
+      if(r.rejected.length) lines.push(esc(G.name+": "+plural(r.rejected.length,"row")+" from the source failed the safety checks and were ignored."));
+    });
+    if(anyFail) cls="bad"; else if(anyPending) cls="warn";
+    var okAll=ORDER.every(function(g){return results[g].ok});
+    if(okAll) upd.lastSuccess=now;
+    updBusy=false;
+    if(total&&upd.autoAdd){
+      var res=await addVerified(found);
+      upd.lastAdded=res.added; updFound=null; saveUpd();
+      if(res.added) renderAll(true); else renderUpdater();
+      lines.unshift("<b>Added "+plural(res.added,"new drawing")+" automatically.</b>"+(res.saveTrouble?" Saving on this device didn't work, so they're kept for this visit only.":""));
+      setUpdHtml(lines.map(function(l){return "<p>"+l+"</p>"}).join(""),res.saveTrouble||anyFail?"warn":"ok");
+    }else{
+      updFound=total?found:null; saveUpd(); renderUpdater();
+      if(total) lines.unshift("<b>Review the new drawing shown above, then tap ADD to save it.</b>");
+      if(mode==="button"||total||anyFail||anyPending) setUpdHtml(lines.map(function(l){return "<p>"+l+"</p>"}).join(""),total&&!anyFail?"ok":cls);
+    }
+    // While a drawing is due but unpublished, keep checking every 15 minutes while the app is open.
+    if(pendingTimer){clearTimeout(pendingTimer);pendingTimer=null}
+    if(anyPending&&!IN_CLAUDE) pendingTimer=setTimeout(function(){if(document.visibilityState!=="hidden")runUpdate("open")},15*60*1000);
+  }
+  var lastAutoCheck=0;
+  function autoCheck(force){
+    if(!force&&Date.now()-lastAutoCheck<10*60*1000) return;   // reopening the app: at most every 10 minutes
+    lastAutoCheck=Date.now();
+    runUpdate("open");
+  }
+  document.getElementById("updBtn").addEventListener("click",function(){runUpdate("button")});
+  document.getElementById("updAddBtn").addEventListener("click",async function(){
+    if(!updFound||updBusy) return;
+    var f=updFound; updFound=null; this.disabled=true;
+    var res=await addVerified(f); this.disabled=false;
+    upd.lastAdded=res.added; saveUpd();
+    renderAll(true);
+    var saved=[];ORDER.forEach(function(g){var ff=f[g];if(ff)ff.forEach(function(rec,date){if(store[g].has(date))saved.push(GAMES[g].name+" "+fmtDate(date,true)+": "+comboText(g,rec))})});
+    setUpdMsg(res.added?"Saved "+plural(res.added,"new drawing")+": "+saved.join("; ")+"."+(res.saveTrouble?" Saving on this device didn't work, so they're kept for this visit only.":""):"Nothing new to save. Those drawings were already stored.",res.saveTrouble?"warn":"ok");
+  });
+  document.getElementById("setAutoAdd").addEventListener("change",function(e){
+    upd.autoAdd=!!e.target.checked; saveUpd();
+    if(upd.autoAdd&&updFound) document.getElementById("updAddBtn").click();
+  });
+
   // ----- Backup and restore (all drawings + saved sets, both games) -----
   function backupJson(){
     var d={};ORDER.forEach(function(gid){d[gid]=sortedDates(gid).map(function(k){return lineOf(k,store[gid].get(k))})});
@@ -1719,21 +2690,21 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     var G=GAMES[game], ctx=buildContext(game,"9999-12-31");
     document.querySelectorAll("#tbCounts button").forEach(function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-c")===tbCount))});
     document.getElementById("tbCustomWrap").hidden=(tbCount!=="custom");
-    var mixed=tbMethods.indexOf("mixed")>=0;
+    var excl=tbMethods.indexOf("maxdiv")>=0?"maxdiv":(tbMethods.indexOf("mixed")>=0?"mixed":null);
     document.getElementById("tbMethods").innerHTML=TB_METHODS.map(function(m){
-      var checked=tbMethods.indexOf(m.id)>=0, off=mixed&&m.id!=="mixed";
+      var checked=tbMethods.indexOf(m.id)>=0, off=!!excl&&m.id!==excl&&m.id!=="mixed"&&m.id!=="maxdiv";
       return '<label class="method'+(off?' off':'')+'"><input type="checkbox" value="'+m.id+'"'+(checked?' checked':'')+(off?' disabled':'')+'><div><b>'+esc(m.name)+'</b><span>'+esc(m.desc)+'</span></div></label>';
     }).join("");
     document.querySelectorAll('#tbMethods input').forEach(function(cb){
       cb.addEventListener("change",function(){
         var id=cb.value;
-        if(cb.checked){ if(id==="mixed") tbMethods=["mixed"]; else if(tbMethods.indexOf(id)<0) tbMethods.push(id); }
+        if(cb.checked){ if(id==="mixed"||id==="maxdiv") tbMethods=[id]; else{ tbMethods=tbMethods.filter(function(x){return x!=="mixed"&&x!=="maxdiv"}); if(tbMethods.indexOf(id)<0) tbMethods.push(id); } }
         else tbMethods=tbMethods.filter(function(x){return x!==id});
         try{localStorage.setItem("lma.v2.tbMethods",JSON.stringify(tbMethods))}catch(e){}
         renderTickets();
       });
     });
-    var ids=activeMethodIds(), needsLb=ids.some(function(id){var st=strategyById(id);return id!=="random"&&st.lookback});
+    var ids=activeMethodIds(), needsLb=ids.some(function(id){var st=strategyById(id);return id!=="random"&&id!=="maxdiv"&&st.lookback});
     document.getElementById("tbLookbackWrap").hidden=!needsLb;
     document.querySelectorAll("#tbLookbacks button").forEach(function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-tlb")===tbLookback))});
     var enough=ctx.mainHist.length>=25, gen=document.getElementById("tbGenerate");
@@ -1749,6 +2720,7 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
       var counts={};set.tickets.forEach(function(t){counts[t.method]=(counts[t.method]||0)+1});
       var short=set.tickets.length<set.requested?" Only "+n(set.tickets.length)+" different tickets could be made with these settings.":"";
       document.getElementById("tbMeta").textContent="Made "+fmtStamp(set.created)+". "+(set.tickets.length>1?"No two tickets share more than "+set.maxShared+" white ball"+(set.maxShared===1?"":"s")+".":"")+short;
+      document.getElementById("tbDiv").innerHTML=set.tickets.length>1?divStatsHtml(set.gid,set.tickets):"";
       document.getElementById("tbList").innerHTML=set.tickets.map(function(t,i){
         return '<div class="ticket"><div class="thead"><div><b>Ticket '+(i+1)+'</b><span class="meth">'+esc(methodName(t.method))+'</span></div>'+
           '<button class="copy1" data-i="'+i+'" aria-label="Copy ticket '+(i+1)+'">Copy</button></div>'+
@@ -1795,18 +2767,382 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     var out=document.getElementById("tbOut"); if(out.scrollIntoView) out.scrollIntoView({behavior:"smooth",block:"start"});
   }
 
+
+  // =====================================================================================
+  // v1.3 — Deep Analysis / Strategy Lab, Smart Picks 2.0, Analyze My Tickets
+  // Heavy calculations live in the labEngine script and run in a Web Worker when possible.
+  // =====================================================================================
+  function curRules(gid){var G=GAMES[gid],c=G.eras[G.eras.length-1];return {M:c.mainMax,B:c.bonusMax}}
+  function labHistory(gid){
+    var bSince=compatibleSince(gid,"bonusMax");
+    return compatListFor(gid,"mainMax").map(function(d){return {d:d.date,m:d.rec.main.slice(),b:d.rec.bonus,bOk:d.date>=bSince}});
+  }
+  function fmtP(p){if(p==null)return "—";if(p<0.001)return "< 0.001";return p.toFixed(3)}
+  function sgn(x,d){var t=x.toFixed(d==null?3:d);if(/^-0\.0+$/.test(t))t=t.slice(1);return (t.charAt(0)==="-"?"":"+")+t}
+  function badge(valid){return valid?'<span class="badge v">Tested against chance</span>':'<span class="badge d">Description only</span>'}
+  function dsec(title,valid,body,open){return '<details class="dsec"'+(open?' open':'')+'><summary><span>'+esc(title)+'</span>'+badge(valid)+'</summary>'+body+'</details>'}
+  function tbl(head,rows,rightFrom){
+    rightFrom=rightFrom==null?1:rightFrom;
+    return '<div class="scrollx"><table class="dtab"><thead><tr>'+head.map(function(h,i){return '<th'+(i>=rightFrom?' class="r"':'')+'>'+esc(h)+'</th>'}).join("")+'</tr></thead><tbody>'+
+      rows.map(function(r){return '<tr>'+r.map(function(c,i){return '<td'+(i>=rightFrom?' class="r"':'')+'>'+c+'</td>'}).join("")+'</tr>'}).join("")+'</tbody></table></div>';
+  }
+
+  // ---------- Diversification stats (Ticket Builder, Smart Picks 2.0, My Tickets) ----------
+  function divStatsHtml(gid,tickets){
+    var r=curRules(gid),G=GAMES[gid],st=LMA_LAB.setStats(tickets,r.M,r.B);
+    return '<div class="updfacts" style="margin-top:10px">'+
+      '<div class="kv"><span>Unique white balls covered</span><span>'+st.unique+' of '+st.maxUnique+' possible</span></div>'+
+      '<div class="kv"><span>Average overlap between tickets</span><span>'+st.avgOverlap.toFixed(2)+' white balls</span></div>'+
+      '<div class="kv"><span>Repeated pairs</span><span>'+(st.repPairs.length?st.repPairs.length+" (e.g. "+esc(st.repPairs.slice(0,3).map(function(x){return x[0]}).join(", "))+")":"None")+'</span></div>'+
+      '<div class="kv"><span>'+esc(G.bonusName)+' coverage</span><span>'+st.bonusUnique+' different of '+st.maxBonusUnique+' possible</span></div></div>';
+  }
+
+  // ================= Deep Analysis =================
+  var dpMsg="", deepRes={}, deepRunning=false, deepWorker=null, deepCancel=false, dpSims="100000";
+  try{var ds=localStorage.getItem("lma.v3.dpSims");if(["10000","100000","1000000"].indexOf(ds)>=0)dpSims=ds;
+      ORDER.forEach(function(g){var raw=localStorage.getItem("lma.v3.deep."+g);if(raw){var o=JSON.parse(raw);if(o&&o.lab!==undefined)deepRes[g]=o}})}catch(e){}
+  function dataKey(gid){var k=sortedDates(gid);return k.length+"|"+(k[k.length-1]||"")}
+  function slimDeep(r){ // drop bulky per-drawing arrays before saving
+    if(r.lab&&r.lab.strats)Object.keys(r.lab.strats).forEach(function(id){var s=r.lab.strats[id];["val","test"].forEach(function(k){if(s[k]){delete s[k].perDraw;delete s[k].perDrawPrize;delete s[k].rec}})});
+    return r;
+  }
+  function runDeepAnalysis(){
+    if(deepRunning) return;
+    var gid=game,r=curRules(gid),hist=labHistory(gid);
+    if(hist.length<60){dpMsg="Deep Analysis needs at least 60 "+GAMES[gid].name+" drawings under today's rules.";renderDeep();return}
+    var input={hist:hist,M:r.M,B:r.B,sims:Number(dpSims),seed:newSeed(),ticketsPerDraw:5,gname:GAMES[gid].name,bname:GAMES[gid].bonusName,bonusSince:compatibleSince(gid,"bonusMax")};
+    deepRunning=true;deepCancel=false;renderDeep();
+    var wrap=document.getElementById("dpProgWrap"),bar=document.getElementById("dpProg"),txt=document.getElementById("dpProgText");
+    wrap.hidden=false;bar.value=0;txt.textContent="Starting…";
+    function progress(f,msg){bar.value=f;txt.textContent=msg+" ("+Math.round(f*100)+"%)"}
+    function finish(res,err){
+      deepRunning=false;wrap.hidden=true;deepWorker=null;
+      if(res){res.dataKey=dataKey(gid);res.when=new Date().toISOString();deepRes[gid]=slimDeep(res);
+        try{localStorage.setItem("lma.v3.deep."+gid,JSON.stringify(deepRes[gid]))}catch(e){}}
+      dpMsg=err?(err==="cancelled"?"Stopped. Nothing was changed.":"Deep Analysis stopped: "+err):"";
+      renderDeep();renderSp2();
+      if(res){var o=document.getElementById("dpOut");if(o.scrollIntoView)o.scrollIntoView({behavior:"smooth",block:"start"})}
+    }
+    function onMain(){ // fallback: same engine on the page, pausing often so the screen never freezes
+      var yieldNow=function(){return new Promise(function(res){setTimeout(res,0)})};
+      LMA_LAB.runDeep(input,{progress:progress,yieldNow:yieldNow,cancelled:function(){return deepCancel}})
+        .then(function(res){finish(res)}).catch(function(e){finish(null,String(e&&e.message||e))});
+    }
+    var w=null;
+    try{var src=document.getElementById("labEngine").textContent;w=new Worker(URL.createObjectURL(new Blob([src],{type:"text/javascript"})))}catch(e){w=null}
+    if(!w){onMain();return}
+    deepWorker=w;var started=false;
+    w.onmessage=function(e){var d=e.data;started=true;
+      if(d.type==="progress")progress(d.f,d.msg);
+      else if(d.type==="done"){w.terminate();finish(d.result)}
+      else if(d.type==="error"){w.terminate();finish(null,d.msg)}};
+    w.onerror=function(){w.terminate();deepWorker=null;if(!started&&!deepCancel)onMain();else finish(null,"the calculation failed")};
+    w.postMessage(input);
+  }
+
+  function renderDeep(){
+    var G=GAMES[game],R=deepRes[game],n=compatListFor(game,"mainMax").length;
+    document.querySelectorAll("#dpSims button").forEach(function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-sims")===dpSims));b.disabled=deepRunning});
+    var run=document.getElementById("dpRun");run.disabled=deepRunning||n<60;
+    run.textContent=deepRunning?"🧠 Running Deep Analysis…":"🧠 RUN DEEP ANALYSIS";
+    document.getElementById("dpInfo").textContent=dpMsg||(n<60?("Add at least 60 "+G.name+" drawings under today's rules to run Deep Analysis."):
+        ("Uses "+plural(n,G.name+" drawing")+" under today's rules. "+(dpSims==="1000000"?"1,000,000 simulations can take about a minute on a phone.":"Takes about 10–40 seconds on a phone.")));
+    var out=document.getElementById("dpOut");
+    if(!R){out.innerHTML="";return}
+    out.innerHTML=deepHtml(R,G);
+  }
+
+  function deepHtml(R,G){
+    var M=R.M,B=R.B,lab=R.lab,h="";
+    var stale=R.dataKey!==dataKey(game);
+    // ---------- Bottom line ----------
+    var unusual=[];
+    if(R.freq.chiP!=null&&R.freq.chiP<0.05)unusual.push("White-ball frequencies were less even than random drawings usually are (p "+fmtP(R.freq.chiP)+").");
+    if(R.freq.flagged.length)unusual.push("After correcting for checking "+M+" numbers, "+R.freq.flagged.join(", ")+" came up unusually often or rarely.");
+    if(R.gaps.test.p!=null&&R.gaps.test.p<0.05)unusual.push("Gaps between appearances didn't match random drawings (p "+fmtP(R.gaps.test.p)+").");
+    R.patterns.forEach(function(p){if(p.padj!=null&&p.padj<0.05)unusual.push(p.name+" differed from simulated random drawings (adjusted p "+fmtP(p.padj)+").")});
+    if(R.mc.maxPairP!=null&&R.mc.maxPairP<0.05)unusual.push("The most common pair came up more than in most simulated histories (p "+fmtP(R.mc.maxPairP)+").");
+    if(R.stability.p!=null&&R.stability.p<0.05&&R.stability.r>0)unusual.push("Frequent numbers tended to stay frequent (p "+fmtP(R.stability.p)+").");
+    var labLine="";
+    if(lab&&!lab.tooSmall){
+      labLine=lab.anyEdge?"<b>At least one strategy beat random picks on the out-of-sample test.</b> Treat this cautiously: rerun as new drawings arrive and see if it holds.":
+        "<b>None of the strategies showed a reliable advantage over random picks.</b> On drawings they were never tuned on, every strategy's results were within the range pure luck produces.";
+    }else labLine="Not enough drawings for out-of-sample strategy testing yet (needs "+(lab?lab.need:180)+").";
+    h+='<div class="bottomline"><h3>Bottom line</h3><p>'+labLine+'</p><ul>'+
+      '<li>Dataset: '+plural(R.n,G.name+" drawing")+' from '+fmtDate(R.from)+' to '+fmtDate(R.to)+' (white balls 1–'+M+'); '+n(R.nBonus)+' use today\'s '+esc(G.bonusName)+' range (1–'+B+').</li>'+
+      '<li>Unusual observations: '+(unusual.length?esc(unusual.join(" ")):"none. Nothing in the history is more unusual than random drawings regularly produce.")+'</li>'+
+      '<li>Compared with '+n(R.mc.N)+' simulated random drawings, history matched in '+R.patterns.filter(function(p){return p.padj==null||p.padj>=0.05}).length+' of '+R.patterns.length+' patterns.</li>'+
+      (lab&&!lab.tooSmall?'<li>Walk-forward test: '+n(lab.test[1]-lab.test[0])+' drawings ('+fmtDate(lab.dates.test[0])+' to '+fmtDate(lab.dates.test[1])+'), '+lab.K+' tickets per strategy per drawing. No-look-ahead check: '+(lab.leakCheck.ok?"passed":"FAILED")+'.</li>':'')+
+      '<li>Diversification: with 10 tickets, Hybrid covered '+R.diversify[10].hybrid.unique+' different white balls; Diversified Hybrid covered '+R.diversify[10].div.unique+'. Less overlap means your tickets don\'t all win or lose together, but each ticket\'s odds stay the same.</li></ul>'+
+      '<p class="help">Run '+esc(fmtStamp(R.when))+' with '+n(R.mc.N)+' simulations. '+(stale?'<b class="warn">New drawings have been added since. Run it again to include them.</b>':'')+'</p></div>';
+
+    // ---------- Strategy Lab ----------
+    if(lab&&!lab.tooSmall){
+      var ids=LMA_LAB.STRAT_ORDER,base=lab.base;
+      var body='<p class="help">How it works: drawings are split in time order. <b>Training</b> ('+fmtDate(lab.dates.train[0])+'–'+fmtDate(lab.dates.train[1])+') picks each strategy\'s best setting. <b>Validation</b> ('+fmtDate(lab.dates.val[0])+'–'+fmtDate(lab.dates.val[1])+') checks it. The verdict uses only the <b>out-of-sample test</b> ('+fmtDate(lab.dates.test[0])+'–'+fmtDate(lab.dates.test[1])+'), which no setting was chosen on. For every drawing, a strategy only sees drawings before it.</p>'+
+        '<p class="help">Exact chance for one ticket: '+base.toFixed(3)+' white-ball matches on average, and a '+pct(lab.pPrize)+' chance of any prize.</p>';
+      body+=tbl(["Strategy","vs chance","Adj. p","Verdict"],ids.map(function(id){var s=lab.strats[id],c=s.testCmp;
+        return ['<b>'+esc(s.name)+'</b><small class="sub">'+esc(s.chosen)+' · avg '+c.mean.toFixed(3)+'</small>','<span class="nw">'+sgn(c.diff)+'</span><small class="sub nw">'+sgn(c.lo)+'…'+sgn(c.hi)+'</small>',fmtP(c.padj),'<span class="chipv '+s.verdict.cls+'">'+esc(s.verdict.label)+'</span>']}),1);
+      body+='<p class="help">"vs chance" is the difference in average white-ball matches per ticket from exact chance, with its 95% range underneath. A range that includes 0 means no clear difference.</p>';
+      body+='<p class="help">"Adj. p" is corrected for testing '+(ids.length-1)+' strategies at once. A strategy only counts as beating random if its adjusted p is below 0.05, it was ahead on validation too, and it beat Pure Random on the same drawings. With this many test drawings, a real edge smaller than about '+lab.strats.random.testCmp.mde.toFixed(3)+' matches per ticket could go undetected.</p>';
+      body+=ids.map(function(id){var s=lab.strats[id],t=s.test,tp=lab.tierProbs,vr=s.vsRandom;
+        var tiers=LMA_LAB.TIERS.map(function(x,i){return [x[0]+(x[1]?" + "+esc(G.bonusName):""),n(t.tiers[i]),(tp[i]*t.bonusTickets).toFixed(1)]});
+        return '<details class="stcard"><summary><span>'+esc(s.name)+'</span><span class="chipv '+s.verdict.cls+'">'+esc(s.verdict.label)+'</span></summary>'+
+          '<p class="help">'+esc(s.desc)+' '+esc(s.verdict.text)+'</p>'+
+          '<div class="kv"><span>Out-of-sample test</span><span>'+n(t.draws)+' drawings, '+n(t.tickets)+' tickets</span></div>'+
+          '<table class="mtab"><thead><tr><th colspan="6">White-ball matches per ticket</th></tr><tr><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead><tbody><tr>'+t.dist.map(function(c){return '<td>'+n(c)+'</td>'}).join("")+'</tr>'+
+          '<tr>'+[0,1,2,3,4,5].map(function(k){return '<td class="help">'+(LMA_LAB.hyper(5,M,5,k)*t.tickets).toFixed(k>3?2:0)+'</td>'}).join("")+'</tr></tbody></table><p class="help" style="margin-top:2px">Second row: expected by pure chance.</p>'+
+          '<div class="kv"><span>'+esc(G.bonusName)+' matches</span><span>'+n(t.bonusHits)+' of '+n(t.bonusTickets)+' (chance: '+(t.bonusTickets/B).toFixed(1)+')</span></div>'+
+          tbl(["Prize tier","Hits","Expected"],tiers,1)+
+          '<div class="kv"><span>Any prize</span><span>'+pct(s.prizeCmp.mean)+' of tickets (chance '+pct(lab.pPrize)+', adj. p '+fmtP(s.prizeCmp.padj)+')</span></div>'+
+          (vr?'<div class="kv"><span>vs Pure Random, same drawings</span><span>'+sgn(vr.diff)+' ('+sgn(vr.lo)+' to '+sgn(vr.hi)+')</span></div>':'')+
+          '<div class="kv"><span>Validation period</span><span>'+sgn(s.valCmp.diff)+' vs chance (p '+fmtP(s.valCmp.p)+')</span></div>'+
+          (s.training.length>1?'<p class="help">Training (average matches per ticket): '+esc(s.training.map(function(x){return x.label+" "+x.mean.toFixed(3)}).join("; "))+'. Best setting chosen: '+esc(s.chosen)+'.</p>':'')+
+          '</details>';
+      }).join("");
+      body+='<p class="help">No-look-ahead check: '+lab.leakCheck.checks+' test drawings were re-run with all later drawings deleted. The picks were '+(lab.leakCheck.ok?"identical, confirming no future drawing influenced a prediction.":"<b>different. Please report this.</b>")+'</p>';
+      h+=dsec("Strategy Lab: walk-forward test",true,body,true);
+    }
+
+    // ---------- Rolling ----------
+    var rb='<p class="help">Hottest and coldest white balls in each recent window, and whether frequencies were more uneven than random drawings make them. "—" means too few drawings for a reliable test.</p>'+
+      tbl(["Window","Hottest","Coldest","Even? p"],R.rolling.map(function(w){return [(w.w==="all"?"All ":"Last ")+n(w.len),
+        w.hot.map(function(x){return x[0]+"<small>×"+x[1]+"</small>"}).join(" "),w.cold.map(function(x){return x[0]+"<small>×"+x[1]+"</small>"}).join(" "),fmtP(w.p)]}),3)+
+      '<p class="help">'+esc(G.bonusName)+' most frequent: '+esc(R.rolling.map(function(w){return (w.w==="all"?"all":"last "+w.len)+": "+w.bHot.map(function(x){return x[0]+"×"+x[1]}).join(", ")}).join("; "))+'.</p>'+
+      '<p class="callout">Short windows always show big swings. A number being hot in the last 10 or 25 drawings is what randomness looks like, not a trend.</p>';
+    h+=dsec("Rolling windows",true,rb);
+
+    // ---------- Frequency ----------
+    var fr=R.freq.rows.slice().sort(function(a,b){return b.z-a.z});
+    function frow(r){return [String(r.v),n(r.o),r.e.toFixed(1),sgn(r.dev,1),r.z.toFixed(2),fmtP(r.padj)]}
+    var fb='<p class="help">All '+n(R.n)+' drawings under today\'s rules. Expected count per white ball: '+R.freq.E.toFixed(1)+'. Overall evenness test: p '+fmtP(R.freq.chiP)+' (below 0.05 would mean less even than random).</p>'+
+      '<h3>Most above expected</h3>'+tbl(["Ball","Actual","Expected","Diff","z","Adj. p"],fr.slice(0,8).map(frow),1)+
+      '<h3>Most below expected</h3>'+tbl(["Ball","Actual","Expected","Diff","z","Adj. p"],fr.slice(-8).reverse().map(frow),1)+
+      '<p class="help">'+R.freq.over196+' of '+M+' numbers are more than 1.96 standard deviations from expected; pure chance produces about '+R.freq.expectOver196.toFixed(1)+'. '+
+      (R.freq.flagged.length?"After correcting for checking "+M+" numbers, still unusual: "+R.freq.flagged.join(", ")+".":"After correcting for checking "+M+" numbers at once, none is unusual.")+'</p>'+
+      '<h3>'+esc(G.bonusName)+'</h3>'+tbl(["Ball","Actual","Expected","Diff","z","Adj. p"],R.freq.brows.slice().sort(function(a,b){return b.z-a.z}).filter(function(r,i,arr){return i<3||i>=arr.length-3}).map(frow),1);
+    h+=dsec("Frequency: actual vs expected",true,fb);
+
+    // ---------- Gaps ----------
+    var gr=R.gaps.rows.slice().sort(function(a,b){return b.cur-a.cur}).slice(0,12);
+    var gb='<p class="callout"><b>An overdue number is NOT more likely to be drawn next.</b> Each drawing is independent. These figures only describe the past.</p>'+
+      tbl(["Ball","Current gap","Avg","Median","Max","Percentile"],gr.map(function(g){return [String(g.v),n(g.cur)+(g.record?" <b>record</b>":""),g.avg.toFixed(1),String(g.med),g.max==null?"—":n(g.max),g.pct==null?"—":pct(g.pct)]}),1)+
+      '<p class="help">Gaps are counted in drawings. With random drawings, the average gap should be about '+R.gaps.expectedAvg.toFixed(1)+'. "Percentile" is the share of that number\'s past gaps that were this long or shorter. Test of whether all '+n(R.gaps.total)+' gaps match random drawings: p '+fmtP(R.gaps.test.p)+'.</p>';
+    h+=dsec("Gaps between appearances",true,gb);
+
+    // ---------- Pairs and triples ----------
+    var c=R.combos,pb='<p class="help">Any one pair is expected about '+c.expPair.toFixed(2)+' times in '+n(R.n)+' drawings; any one triple about '+c.expTriple.toFixed(3)+' times.</p>'+
+      tbl(["Pair","Times"],c.topPairs.slice(0,6).map(function(x){return [x[0],n(x[1])]}),1)+
+      '<p class="help">Most common pair: '+c.maxPair+' times. In simulated random histories the most common pair averaged '+(R.mc.simMaxPairAvg==null?"—":R.mc.simMaxPairAvg.toFixed(1))+' (p '+fmtP(R.mc.maxPairP)+'). Pairs never drawn: '+n(c.neverPairs)+' of '+n(c.nPairs)+' (random would leave about '+c.expNeverPairs.toFixed(0)+', p '+fmtP(R.mc.neverPairsP)+').</p>'+
+      tbl(["Triple","Times"],c.topTriples.slice(0,5).map(function(x){return [x[0],n(x[1])]}),1)+
+      '<p class="help">Most common triple: '+c.maxTriple+' times; simulated histories averaged '+(R.mc.simMaxTripleAvg==null?"—":R.mc.simMaxTripleAvg.toFixed(1))+' (p '+fmtP(R.mc.maxTripleP)+').</p>'+
+      '<p class="callout">With '+n(c.nPairs)+' possible pairs and '+n(c.nTriples)+' possible triples, some will always repeat more than others by luck. The p-values compare the top ones with what random histories of the same length produce.</p>';
+    h+=dsec("Pairs and triples",R.mc.reps>=19,pb);
+
+    // ---------- Patterns ----------
+    var patb='<p class="help">Each pattern in past drawings compared with '+n(R.mc.N)+' simulated random drawings. "Adj. p" is corrected for checking '+R.patterns.length+' patterns.</p>'+
+      R.patterns.map(function(p){return '<h3>'+esc(p.name)+'</h3>'+tbl(["Group","Past","Simulated"],p.labels.map(function(l,i){return [esc(l),pct(p.obs[i]/Math.max(1,p.n)),pct(p.probs[i])]}),1)+
+        '<p class="help">Adj. p '+fmtP(p.padj)+': '+(p.padj==null?"too few drawings to test.":p.padj<0.05?"<b>differs from random drawings.</b>":"matches random drawings.")+'</p>'}).join("");
+    h+=dsec("Patterns vs random drawings",true,patb);
+
+    // ---------- Monte Carlo ----------
+    var mcb='<div class="kv"><span>Simulated drawings</span><span>'+n(R.mc.N)+'</span></div>'+
+      '<div class="kv"><span>Simulated histories of '+n(R.n)+' drawings</span><span>'+n(R.mc.reps)+'</span></div>'+
+      '<div class="kv"><span>Simulation accuracy (odd/even vs exact math)</span><span>within '+(R.mc.maxErr*100).toFixed(2)+' percentage points</span></div>'+
+      '<div class="kv"><span>Evenness of all frequencies vs simulations</span><span>p '+fmtP(R.mc.chiP)+'</span></div>'+
+      '<div class="kv"><span>Most extreme single number vs simulations</span><span>p '+fmtP(R.mc.maxZP)+'</span></div>'+
+      '<div class="kv"><span>Do frequent numbers stay frequent?</span><span>r = '+R.stability.r.toFixed(3)+' (random ≈ '+R.stability.expected.toFixed(3)+', p '+fmtP(R.stability.p)+')</span></div>'+
+      '<p class="help">The last line compares blocks of '+R.stability.w+' drawings with the block right after. A positive, significant r would mean "hot" numbers tend to stay hot.</p>'+
+      (R.mc.reps<19?'<p class="warn">Choose 100,000 or 1,000,000 simulations for reliable history-level comparisons.</p>':'');
+    h+=dsec("Monte Carlo simulation",true,mcb);
+
+    // ---------- Diversification ----------
+    var d5=R.diversify[5],d10=R.diversify[10];
+    var dvb=tbl(["Tickets","Method","White balls covered","Avg overlap","Repeated pairs",esc(G.bonusName)+"s"],[
+      ["5","Hybrid",String(d5.hybrid.unique),d5.hybrid.avgOverlap.toFixed(2),String(d5.hybrid.repPairs.length),String(d5.hybrid.bonusUnique)],
+      ["5","Diversified Hybrid",String(d5.div.unique),d5.div.avgOverlap.toFixed(2),String(d5.div.repPairs.length),String(d5.div.bonusUnique)],
+      ["10","Hybrid",String(d10.hybrid.unique),d10.hybrid.avgOverlap.toFixed(2),String(d10.hybrid.repPairs.length),String(d10.hybrid.bonusUnique)],
+      ["10","Diversified Hybrid",String(d10.div.unique),d10.div.avgOverlap.toFixed(2),String(d10.div.repPairs.length),String(d10.div.bonusUnique)]],2)+
+      '<p class="callout">Diversifying never changes the chance that any single ticket wins. It spreads your tickets so they share fewer numbers, which mostly changes how results are spread across tickets, not the average.</p>';
+    h+=dsec("Diversification opportunities",false,dvb);
+
+    // ---------- What's validated ----------
+    h+=dsec("Which results are tested vs descriptive",false,'<p class="help"><b>Tested against chance</b> (each has a p-value or confidence range): Strategy Lab, frequency evenness, gap distribution, pattern comparisons, pair/triple extremes, "do hot numbers stay hot?".</p>'+
+      '<p class="help"><b>Description only</b>: hottest/coldest lists, current gaps, top pairs and triples, diversification counts. These describe the past and say nothing about the next drawing.</p>'+
+      '<p class="help">A small p-value on one line among many is expected by luck, which is why several results are corrected for the number of checks.</p>');
+    return h;
+  }
+
+  // ================= Smart Picks 2.0 =================
+  var SP2_METHODS=[
+    {id:"balanced",name:"Balanced",eng:"balanced",param:null,desc:"Random numbers with the most common shape (odd/even, low/high, middle sum, spread)."},
+    {id:"diversified",name:"Diversified",eng:"divhybrid",param:0.5,desc:"Hybrid scores, with each ticket avoiding numbers earlier tickets used."},
+    {id:"frequency",name:"Frequency",eng:"frequency",param:100,desc:"Leans toward numbers drawn most often in the last 100 drawings."},
+    {id:"gap",name:"Gap",eng:"gap",param:1,desc:"Leans toward numbers not drawn for a long time. Overdue numbers are not more likely."},
+    {id:"hybrid",name:"Hybrid",eng:"hybrid",param:0.5,desc:"Half frequency, half gap, preferring a balanced shape."},
+    {id:"random",name:"Pure Random",eng:"random",param:null,desc:"Completely random. Exactly as likely to win as any other method."},
+    {id:"anticrowd",name:"Anti-Crowd",eng:"random",param:null,anti:true,desc:"Random numbers that avoid patterns many people pick. May reduce prize sharing; doesn't change odds."},
+    {id:"maxcov",name:"Maximum Coverage",eng:null,param:null,desc:"Covers as many different numbers and bonus balls as possible across the set."}
+  ];
+  var sp2Id="hybrid",sp2Count="5",sp2Anti=false,sp2Set={};
+  try{var s2i=localStorage.getItem("lma.v3.sp2");if(SP2_METHODS.some(function(m){return m.id===s2i}))sp2Id=s2i;
+      var s2c=localStorage.getItem("lma.v3.sp2c");if(["3","5","10","20"].indexOf(s2c)>=0)sp2Count=s2c;sp2Anti=localStorage.getItem("lma.v3.sp2a")==="1"}catch(e){}
+  function sp2Method(id){for(var i=0;i<SP2_METHODS.length;i++)if(SP2_METHODS[i].id===id)return SP2_METHODS[i];return SP2_METHODS[0]}
+  function sp2Generate(){
+    var gid=game,r=curRules(gid),hist=labHistory(gid),meth=sp2Method(sp2Id),K=Number(sp2Count),seed=newSeed(),tickets=[];
+    var anti=sp2Anti||!!meth.anti,crowdNote=null;
+    if(!meth.eng){
+      tickets=LMA_LAB.coverageTickets(K,r.M,r.B,mulberry32(seed)).map(function(t){return {main:t.main,bonus:t.bonus,notes:["Picked to cover white balls the other tickets in this set don't use, and to avoid repeated pairs.","Bonus "+t.bonus+": spread across different bonus numbers.","Doesn't change this ticket's odds."]}});
+      if(anti)crowdNote="The anti-crowd filter isn't applied to Maximum Coverage, because coverage has to use every number range.";
+    }else{
+      var ctx=new LMA_LAB.Ctx(hist,r.M,r.B),view=new LMA_LAB.View(ctx,hist.length),st=LMA_LAB.STRATS[meth.eng];
+      var used=new Float64Array(r.M+1),bused=new Float64Array(r.B+1),prev=[],seen={};
+      for(var k=0;k<K;k++){var tk=null,fallback=null;
+        for(var a=0;a<300&&!tk;a++){var rng=mulberry32(LMA_LAB.hashSeed(seed,k,a));
+          var g=st.gen(view,rng,meth.param,{used:used,bused:bused,prev:prev,explain:true}),key=g.m.join("-")+"+"+g.b;
+          if(seen[key])continue;if(!fallback)fallback=g;
+          if(anti&&LMA_LAB.crowdIssues(g.m).length)continue;tk=g}
+        tk=tk||fallback;if(!tk)continue;seen[tk.m.join("-")+"+"+tk.b]=1;prev.push(tk);tk.m.forEach(function(u){used[u]++});bused[tk.b]++;
+        var notes=tk.why.slice();if(anti)notes.push(LMA_LAB.crowdIssues(tk.m).length?"Couldn't fully avoid common patterns for this ticket.":"Passed the anti-crowd check (avoids common human-picked patterns). This doesn't change its odds.");
+        tickets.push({main:tk.m,bonus:tk.b,notes:notes})}
+    }
+    sp2Set[gid]={gid:gid,method:meth.id,anti:anti,tickets:tickets.map(function(t){return {main:t.main,bonus:t.bonus,method:"sp2-"+meth.id,notes:t.notes}}),created:new Date().toISOString(),saved:false,crowdNote:crowdNote};
+    renderSp2();var o=document.getElementById("sp2Out");if(o.scrollIntoView)o.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function renderSp2(){
+    var G=GAMES[game],n0=compatListFor(game,"mainMax").length;
+    document.getElementById("sp2List").innerHTML=SP2_METHODS.map(function(m){return '<label class="strat"><input type="radio" name="sp2" value="'+m.id+'"'+(m.id===sp2Id?' checked':'')+'><div><b>'+esc(m.name)+'</b><span>'+esc(m.desc)+'</span></div></label>'}).join("");
+    document.querySelectorAll('input[name="sp2"]').forEach(function(rr){rr.addEventListener("change",function(){sp2Id=rr.value;try{localStorage.setItem("lma.v3.sp2",sp2Id)}catch(e){};renderSp2()})});
+    document.querySelectorAll("#sp2Counts button").forEach(function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-sc")===sp2Count))});
+    document.getElementById("sp2Anti").checked=sp2Anti;
+    var gen=document.getElementById("sp2Gen");gen.disabled=n0<25;gen.textContent="Generate "+sp2Count+" Smart Picks 2.0 tickets";
+    var meth=sp2Method(sp2Id),R=deepRes[game],labNote="";
+    if(R&&R.lab&&!R.lab.tooSmall&&meth.eng&&R.lab.strats[meth.eng]){var s=R.lab.strats[meth.eng];labNote=" In your last Deep Analysis, "+s.name+" on out-of-sample drawings: "+s.verdict.label.toLowerCase()+" ("+sgn(s.testCmp.diff)+" matches per ticket vs chance).";}
+    document.getElementById("sp2Basis").textContent=(n0<25?"Add at least 25 "+G.name+" drawings under today's rules.":"Uses "+plural(n0,G.name+" drawing")+" under today's rules.")+labNote;
+    var set=sp2Set[game],out=document.getElementById("sp2Out");
+    if(!set){out.innerHTML="";return}
+    out.innerHTML='<p class="picks-head" style="margin-top:16px">'+esc(sp2Method(set.method).name)+': '+plural(set.tickets.length,"ticket")+'</p>'+
+      '<p class="help">For entertainment and analysis only. No ticket here is more likely to win than any other combination.'+(set.crowdNote?" "+esc(set.crowdNote):"")+'</p>'+
+      (set.tickets.length>1?divStatsHtml(set.gid,set.tickets):"")+
+      '<div class="row"><button class="btn big" id="sp2Copy">COPY ALL PICKS</button></div>'+
+      set.tickets.map(function(t,i){return '<div class="ticket"><div class="thead"><div><b>Ticket '+(i+1)+'</b></div><button class="copy1" data-sp2="'+i+'">Copy</button></div>'+
+        '<div class="balls">'+t.main.map(function(v){return '<span class="ball">'+v+'</span>'}).join("")+'<span class="ball bonus '+G.bonusClass+'">'+t.bonus+'</span></div>'+
+        '<details><summary>How this ticket was made</summary><ul class="why">'+t.notes.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul></details></div>'}).join("")+
+      '<div class="row"><button class="btn" id="sp2Save"'+(set.saved?' disabled':'')+'>'+(set.saved?"✓ Saved":"Save This Set")+'</button><button class="btn ghost" id="sp2Check">🎟 Analyze these tickets</button></div><p class="help" id="sp2Msg"></p>';
+    document.getElementById("sp2Copy").addEventListener("click",function(){doCopy(setText(set),this,"COPY ALL PICKS")});
+    document.querySelectorAll("[data-sp2]").forEach(function(b){b.addEventListener("click",function(){doCopy(ticketLine(set.tickets[Number(b.getAttribute("data-sp2"))],set.gid),b,"Copy")})});
+    document.getElementById("sp2Save").addEventListener("click",function(){var btn=this;btn.disabled=true;saveSet(set).then(function(where){set.saved=true;renderSp2();document.getElementById("sp2Msg").textContent="Saved "+where+". It's under Saved sets in Ticket Builder.";renderTickets()})});
+    document.getElementById("sp2Check").addEventListener("click",function(){loadTicketsToCheck(set.tickets,set.gid);view="mytix";try{localStorage.setItem("lma.v2.view",view)}catch(e){};renderAll(false);analyzeMyTickets();window.scrollTo(0,0)});
+  }
+
+  // ================= Analyze My Tickets =================
+  var mtProposal=null,mtTickets=null,mtMax=false,mtGame=null;
+  function loadTicketsToCheck(tickets,gid){
+    document.getElementById("mtPaste").value=tickets.map(function(t){return t.main.join(" ")+" "+t.bonus}).join("\n");
+    mtProposal=null;document.getElementById("mtOut").innerHTML="";document.getElementById("mtMsg").textContent="Loaded "+plural(tickets.length,GAMES[gid].name+" ticket")+".";
+  }
+  function parseTickets(text,gid){
+    var r=curRules(gid),out=[],bad=[];
+    text.split(/\r?\n/).forEach(function(line,i){
+      var l=line.replace(/^\s*ticket\s*\d+\s*[:.)\-]?/i,"").replace(/^\s*\d+[.)]\s+/,"").replace(/\b(PB|MB|Powerball|Mega\s*Ball)\b/gi," ");
+      if(!l.trim())return;
+      var nums=(l.match(/\d+/g)||[]).map(Number);
+      if(nums.length!==6){bad.push("Line "+(i+1)+": found "+nums.length+" numbers (need 6)");return}
+      var main=nums.slice(0,5),b=nums[5];
+      if(new Set(main).size!==5){bad.push("Line "+(i+1)+": a white ball repeats");return}
+      if(main.some(function(v){return v<1||v>r.M})||b<1||b>r.B){bad.push("Line "+(i+1)+": numbers outside 1–"+r.M+" or bonus outside 1–"+r.B);return}
+      out.push({main:main.sort(function(a,c){return a-c}),bonus:b,method:"pasted"})});
+    return {tickets:out,bad:bad};
+  }
+  function renderMytix(){
+    var G=GAMES[game],src=document.getElementById("mtSources"),btns=[];
+    if(mtGame&&mtGame!==game){mtGame=null;mtTickets=null;mtProposal=null;document.getElementById("mtOut").innerHTML="";document.getElementById("mtMsg").textContent="";}
+    if(tbSet[game])btns.push('<button class="btn ghost" data-mtsrc="tb">Latest Ticket Builder set</button>');
+    if(sp2Set[game])btns.push('<button class="btn ghost" data-mtsrc="sp2">Latest Smart Picks 2.0 set</button>');
+    savedSets[game].slice(0,8).forEach(function(x){btns.push('<button class="btn ghost" data-mtsrc="saved:'+esc(x.id)+'">Saved '+esc(fmtStamp(x.created))+' ('+x.tickets.length+')</button>')});
+    src.innerHTML=btns.length?'<div class="row">'+btns.join("")+'</div>':'<p class="help">No generated or saved '+esc(G.name)+' sets yet. Paste tickets below.</p>';
+    src.querySelectorAll("[data-mtsrc]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-mtsrc"),set=null;
+      if(k==="tb")set=tbSet[game].tickets;else if(k==="sp2")set=sp2Set[game].tickets;else{var id=k.slice(6);var x=savedSets[game].filter(function(y){return y.id===id})[0];if(x)set=x.tickets}
+      if(set)loadTicketsToCheck(set,game)})});
+    document.getElementById("mtPaste").placeholder=G.name+": 5 white balls (1–"+curRules(game).M+") then "+G.bonusName+" (1–"+curRules(game).B+")";
+  }
+  function ticketRow(t,G,changed){
+    var ch={};(changed||[]).forEach(function(c){ch[c[1]]=1});
+    return t.main.map(function(v){return ch[v]?'<span class="chg">'+v+'</span>':String(v)}).join(" ")+' | '+(ch["B"+t.bonus]?'<span class="chg">'+t.bonus+'</span>':t.bonus);
+  }
+  function analyzeMyTickets(){
+    var G=GAMES[game],r=curRules(game),p=parseTickets(document.getElementById("mtPaste").value,game),out=document.getElementById("mtOut");
+    mtProposal=null;
+    if(!p.tickets.length){document.getElementById("mtMsg").textContent=p.bad.length?p.bad.slice(0,3).join(". ")+".":"Paste or load some tickets first.";out.innerHTML="";return}
+    mtTickets=p.tickets;mtGame=game;document.getElementById("mtMsg").textContent=p.bad.length?("Skipped "+p.bad.length+" line(s): "+p.bad.slice(0,2).join("; ")+"."):"";
+    var st=LMA_LAB.setStats(p.tickets,r.M,r.B),flags=[];
+    if(st.dupes.length)flags.push("Duplicate tickets: "+st.dupes.map(function(d){return "#"+d[0]+" and #"+d[1]}).join(", ")+". A duplicate only pays the same prize twice; it doesn't add a new chance.");
+    if(st.heavy.length)flags.push(plural(st.heavy.length,"pair")+" of tickets share 3 or more white balls (e.g. #"+st.heavy[0][0]+" and #"+st.heavy[0][1]+" share "+st.heavy[0][2]+").");
+    if(st.k>1&&st.unique<st.maxUnique*0.7)flags.push("Your tickets cover "+st.unique+" different white balls; up to "+st.maxUnique+" is possible.");
+    if(st.k>1&&st.bonusUnique<Math.min(st.maxBonusUnique,st.k)*0.7)flags.push("Only "+st.bonusUnique+" different "+G.bonusName+" numbers across "+st.k+" tickets.");
+    if(st.bdayShare>st.bdayExpected+0.15)flags.push(Math.round(st.bdayShare*100)+"% of your white balls are 1–31 (random tickets: about "+Math.round(st.bdayExpected*100)+"%). Many people pick birthdays, so these numbers are more often shared if they win.");
+    if(st.k>=4&&st.sameShapeMax>=Math.ceil(st.k*0.6))flags.push(st.sameShapeMax+" of "+st.k+" tickets have the same shape (odd/even, low/high and sum range).");
+    var crowdT=st.crowd.map(function(c,i){return c.length?"#"+(i+1)+": "+c.join(", "):null}).filter(Boolean);
+    out.innerHTML='<section class="block"><h2>Results for '+plural(st.k,G.name+" ticket")+'</h2>'+
+      (flags.length?'<ul class="why" style="margin-top:10px">'+flags.map(function(f){return '<li class="issue">'+esc(f)+'</li>'}).join("")+'</ul>':'<p class="good" style="margin-top:10px">No duplicates, heavy overlap or unusual concentration found.</p>')+
+      '<div class="updfacts" style="margin-top:10px">'+
+      '<div class="kv"><span>Duplicate tickets</span><span>'+st.dupes.length+'</span></div>'+
+      '<div class="kv"><span>White balls covered</span><span>'+st.unique+' of '+st.maxUnique+' possible</span></div>'+
+      '<div class="kv"><span>Average / largest overlap</span><span>'+st.avgOverlap.toFixed(2)+' / '+st.maxShared+' white balls</span></div>'+
+      '<div class="kv"><span>Pairs covered</span><span>'+st.pairsCovered+' different ('+st.repPairs.length+' repeated)</span></div>'+
+      '<div class="kv"><span>'+esc(G.bonusName)+' coverage</span><span>'+st.bonusUnique+' of '+st.maxBonusUnique+' possible</span></div>'+
+      '<div class="kv"><span>Odd share</span><span>'+pct(st.oddShare)+' (random about '+pct(st.oddExpected)+')</span></div>'+
+      '<div class="kv"><span>Low share (1–'+Math.floor(r.M/2)+')</span><span>'+pct(st.lowShare)+' (random about '+pct(st.lowExpected)+')</span></div>'+
+      '<div class="kv"><span>Birthday numbers (1–31)</span><span>'+pct(st.bdayShare)+' (random about '+pct(st.bdayExpected)+')</span></div>'+
+      '<div class="kv"><span>Structural variety</span><span>'+st.shapes+' different shapes; largest group '+st.sameShapeMax+'</span></div></div>'+
+      (crowdT.length?'<h3>Commonly picked patterns</h3><ul class="why">'+crowdT.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul><p class="help">These patterns are as likely to be drawn as any other; they\'re just picked by many people, so a win is more likely to be shared.</p>':'')+
+      '<p class="callout">None of these checks changes any ticket\'s chance of winning. They help you avoid paying twice for the same numbers and spread your tickets out.</p>'+
+      (st.k>1?'<h3>Diversify</h3><label class="toggle"><input type="checkbox" id="mtMax"'+(mtMax?' checked':'')+'><span><b>Maximum diversification</b><br><span class="help" style="margin:0">Aim for no shared white balls between tickets (otherwise at most 1).</span></span></label>'+
+        '<div class="row"><button class="btn big" id="mtDiv">DIVERSIFY MY TICKETS</button></div><p class="help">This only suggests changes. Your tickets and saved sets stay exactly as they are unless you approve.</p><div id="mtProp"></div>':'')+
+      '</section>';
+    var mx=document.getElementById("mtMax");if(mx)mx.addEventListener("change",function(e){mtMax=e.target.checked});
+    var dv=document.getElementById("mtDiv");if(dv)dv.addEventListener("click",proposeDiversify);
+  }
+  function proposeDiversify(){
+    var G=GAMES[game],r=curRules(game);if(!mtTickets)return;
+    var prop=LMA_LAB.diversify(mtTickets,r.M,r.B,mulberry32(newSeed()),mtMax?0:1),changedN=prop.filter(function(t){return t.changed.length}).length;
+    mtProposal=prop;
+    var before=LMA_LAB.setStats(mtTickets,r.M,r.B),after=LMA_LAB.setStats(prop,r.M,r.B),box=document.getElementById("mtProp");
+    if(!changedN){box.innerHTML='<p class="good">Your tickets are already diversified at this level. No changes suggested.</p>';return}
+    box.innerHTML='<p class="help" style="color:var(--ink)"><b>Suggested changes</b> ('+plural(changedN,"ticket")+' changed, highlighted):</p>'+
+      tbl(["#","Your ticket","Suggested"],prop.map(function(t,i){return [String(i+1),esc(ticketRow(mtTickets[i],G)),ticketRow(t,G,t.changed)]}),3)+
+      tbl(["","Before","After"],[["White balls covered",String(before.unique),String(after.unique)],["Average overlap",before.avgOverlap.toFixed(2),after.avgOverlap.toFixed(2)],["Repeated pairs",String(before.repPairs.length),String(after.repPairs.length)],[esc(G.bonusName)+" coverage",String(before.bonusUnique),String(after.bonusUnique)]],1)+
+      '<p class="help">Each suggested ticket has exactly the same odds as your original.</p>'+
+      '<div class="row"><button class="btn" id="mtApprove">Approve: save as a new set</button><button class="btn ghost" id="mtCopy">Copy suggested</button><button class="btn ghost" id="mtCancel">Keep mine</button></div><p class="help" id="mtSaveMsg"></p>';
+    var newSet={gid:game,tickets:prop.map(function(t){return {main:t.main.slice(),bonus:t.bonus,method:"diversified"}}),created:new Date().toISOString()};
+    document.getElementById("mtApprove").addEventListener("click",function(){var b=this;b.disabled=true;saveSet(newSet).then(function(where){b.textContent="✓ Saved as a new set";document.getElementById("mtSaveMsg").textContent="Saved "+where+" as a new set. Your original tickets were not changed.";renderTickets();renderMytix()})});
+    document.getElementById("mtCopy").addEventListener("click",function(){doCopy(setText(newSet),this,"Copy suggested")});
+    document.getElementById("mtCancel").addEventListener("click",function(){mtProposal=null;box.innerHTML='<p class="help">No changes made.</p>'});
+  }
+
+  // ---------- Events for the new screens ----------
+  document.querySelectorAll("#dpSims button").forEach(function(b){b.addEventListener("click",function(){dpSims=b.getAttribute("data-sims");try{localStorage.setItem("lma.v3.dpSims",dpSims)}catch(e){};dpMsg="";renderDeep()})});
+  document.getElementById("dpRun").addEventListener("click",function(){dpMsg="";runDeepAnalysis()});
+  document.getElementById("dpStop").addEventListener("click",function(){deepCancel=true;if(deepWorker){deepWorker.terminate();deepWorker=null;deepRunning=false;document.getElementById("dpProgWrap").hidden=true;dpMsg="Stopped. Nothing was changed.";renderDeep()}});
+  document.querySelectorAll("#sp2Counts button").forEach(function(b){b.addEventListener("click",function(){sp2Count=b.getAttribute("data-sc");try{localStorage.setItem("lma.v3.sp2c",sp2Count)}catch(e){};renderSp2()})});
+  document.getElementById("sp2Anti").addEventListener("change",function(e){sp2Anti=e.target.checked;try{localStorage.setItem("lma.v3.sp2a",sp2Anti?"1":"0")}catch(x){}});
+  document.getElementById("sp2Gen").addEventListener("click",sp2Generate);
+  document.getElementById("mtRun").addEventListener("click",analyzeMyTickets);
+
   function renderView(){
     document.getElementById("viewDrawings").hidden=(view!=="drawings");
     document.getElementById("viewAnalysis").hidden=(view!=="analysis");
     document.getElementById("viewPicks").hidden=(view!=="picks");
     document.getElementById("viewBacktest").hidden=(view!=="backtest");
     document.getElementById("viewTickets").hidden=(view!=="tickets");
+    document.getElementById("viewDeep").hidden=(view!=="deep");
+    document.getElementById("viewMytix").hidden=(view!=="mytix");
     document.querySelectorAll(".tab[data-view]").forEach(function(t){
       if(t.getAttribute("data-view")===view) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current");
     });
   }
 
-  function renderAll(animate){renderSwitch();renderNotice();renderView();renderLatest(animate);renderFacts();renderRules();renderAdd();renderRecent();renderAnalysis();renderPicks();renderBacktest();renderTickets()}
+  function renderAll(animate){renderSwitch();renderNotice();renderView();renderLatest(animate);renderFacts();renderRules();renderAdd();renderRecent();renderAnalysis();renderPicks();renderBacktest();renderTickets();renderUpdater();renderDeep();renderSp2();renderMytix()}
 
   function showReport(r){
     var G=GAMES[game], other=GAMES[game==="powerball"?"megamillions":"powerball"];
@@ -2000,10 +3336,12 @@ footer{margin-top:36px;color:var(--muted);font-size:.85rem}
     try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
   }
 
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")autoCheck(false)});
+
   // ---------- Start ----------
   ORDER.forEach(loadLocal);
   renderAll(true);
-  connectCloud();
+  connectCloud().then(function(){autoCheck(true)});
 
   window.__lma={parseText:parseText,setGame:function(g){game=g},store:store,compatibleSince:compatibleSince,
     test:{compatList:compatList,countIn:countIn,gapsIn:gapsIn,hotCold:hotCold,setPeriod:function(p){period=p},windowOf:windowOf,renderAll:renderAll,
